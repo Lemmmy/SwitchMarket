@@ -1,0 +1,10 @@
+{
+  "extends": "keystone",
+  "rules": {
+    "semi": ["error", "always"],
+    "quotes": ["error", "double", {"allowTemplateLiterals": true}],
+    "comma-dangle": ["error", "never"],
+    "indent": ["error", 2],
+    "space-before-function-paren": ["error", "never"]
+  }
+}

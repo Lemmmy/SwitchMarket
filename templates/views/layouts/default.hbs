@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>SwitchMarket</title>
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+		<link href="/styles/site.css" rel="stylesheet">
+
+		{{{isAdminEditorCSS user}}}
+	</head>
+	<body>
+    <div id="site-header" class="mb-3 border-bottom box-shadow">
+      <div id="site-header-inner" class="d-flex flex-column flex-md-row align-items-center container py-3 bg-white">
+        <h5 class="my-0 mr-md-auto font-weight-normal">SwitchMarket</h5>
+        <nav class="my-2 my-md-0">
+          {{# each navLinks}}
+            <a class="py-2 pl-4 text-dark {{#ifeq ../section key}}{{else}}{{/ifeq}}" href="{{href}}">{{label}}</a>
+          {{/each}}
+        </nav>
+      </div>      
+    </div>
+		<div id="site-body">
+			{{#if messages}}
+        <div id="flash-messages" class="container">
+          {{#if messages.info}}
+          <div class="alert alert-info">
+              {{{flashMessages messages.info}}}
+          </div>
+          {{/if}}
+          {{#if messages.success}}
+          <div class="alert alert-success">
+              {{{flashMessages messages.success}}}
+          </div>
+          {{/if}}
+          {{#if messages.warning}}
+          <div class="alert alert-warning">
+              {{{flashMessages messages.warning}}}
+          </div>
+          {{/if}}
+          {{#if messages.error}}
+          <div class="alert alert-danger">
+              {{{flashMessages messages.error}}}
+          </div>
+          {{/if}}
+        </div>
+			{{/if}}
+			
+			{{{body}}}
+		</div>
+    <div id="footer" class="container">
+      <p>
+        Created by <a href="https://github.com/Lemmmy/">Lemmmy</a>
+        <span class="text-muted">&ndash;</span>
+        {{#if user}}
+          <a href="/keystone">Admin UI</a>
+          <span class="text-muted">&ndash;</span>
+          <a href="/keystone/signout">Logout</a>
+        {{else}}
+          <a href="/keystone/signin">Admin Login</a>
+        {{/if}}
+      </p>
+    </div>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+		{{{isAdminEditorJS user}}}
+	</body>
+</html>
