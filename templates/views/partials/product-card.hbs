@@ -1,0 +1,27 @@
+<div class="col-md-4 pb-4">
+  <div class="card product-card">
+    {{#if image}}<a href="/products/{{slug}}"><img class="card-img-top" src="/uploads/{{image.filename}}" /></a>{{/if}}
+    <div class="card-body clearfix">
+      {{#ifeq saleType "auction"}}
+        <span class="badge badge-primary float-right text-uppercase">Auction</span>
+      {{/ifeq}}
+      <a href="/products/{{slug}}"><h5 class="card-title text-dark">{{name}}</h5></a>
+      <p class="card-text">
+        {{#ifeq productType "claim"}}
+          <b>Size:</b> {{size startX endX}}x{{size startY endY}}x{{size startZ endZ}}
+        {{/ifeq}}
+      </p>
+    </div>
+    <div class="card-footer">
+      {{#if currentBid}}
+        <b>Current bid:</b> {{currentBid.amount}} KST
+        <small class="text-muted">{{timeago currentBid.createdAt}}</small>
+      {{else}}
+        <span class="text-muted">No bid yet. <a href="/products/{{slug}}">Bid now!</a></span>
+      {{/if}}
+      
+      <br />
+      <b>Ends:</b> <span class="text-muted">{{timeago endsAt}}</span>
+    </div>
+  </div>
+</div>

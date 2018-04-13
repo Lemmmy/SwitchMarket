@@ -3,6 +3,14 @@ require("dotenv").config();
 const keystone = require("keystone");
 const handlebars = require("express-handlebars");
 
+module.exports.storage = new keystone.Storage({
+  adapter: keystone.Storage.Adapters.FS,
+  fs: {
+    path: keystone.expandPath("./public/uploads"),
+    publicPath: "/uploads"
+  }
+});
+
 keystone.init({
   "name": "SwitchMarket",
   "brand": "SwitchMarket",
@@ -25,14 +33,6 @@ keystone.init({
   "session": true,
   "auth": true,
   "user model": "User"
-});
-
-module.exports.storage = new keystone.Storage({
-  adapter: keystone.Storage.Adapters.FS,
-  fs: {
-    path: keystone.expandPath("./uploads"),
-    publicPath: "/public/uploads"
-  }
 });
 
 keystone.import("models");

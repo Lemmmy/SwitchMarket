@@ -12,13 +12,15 @@
 	</head>
 	<body>
     <div id="site-header" class="mb-3 border-bottom box-shadow">
-      <div id="site-header-inner" class="d-flex flex-column flex-md-row align-items-center container py-3 bg-white">
-        <h5 class="my-0 mr-md-auto font-weight-normal">SwitchMarket</h5>
-        <nav class="my-2 my-md-0">
-          {{# each navLinks}}
-            <a class="py-2 pl-4 text-dark {{#ifeq ../section key}}{{else}}{{/ifeq}}" href="{{href}}">{{label}}</a>
-          {{/each}}
-        </nav>
+      <div id="site-header-inner" class="container bg-white">
+        <div class="row d-flex flex-column flex-md-row align-items-center py-3">
+          <h5 class="my-0 mr-md-auto font-weight-normal"><a href="/" class="text-dark">SwitchMarket</a></h5>
+          <nav class="my-2 my-md-0">
+            {{# each navLinks}}
+              <a class="py-2 pl-4 text-dark {{#ifeq ../section key}}{{else}}{{/ifeq}}" href="{{href}}">{{label}}</a>
+            {{/each}}
+          </nav>          
+        </div>
       </div>      
     </div>
 		<div id="site-body">
@@ -49,21 +51,31 @@
 			
 			{{{body}}}
 		</div>
-    <div id="footer" class="container">
-      <p>
-        Created by <a href="https://github.com/Lemmmy/">Lemmmy</a>
-        <span class="text-muted">&ndash;</span>
-        {{#if user}}
-          <a href="/keystone">Admin UI</a>
+    <div id="footer" class="container border-top py-4 mt-4">
+      <div class="row">
+        <p>
+          Created by <a href="https://github.com/Lemmmy/">Lemmmy</a>
           <span class="text-muted">&ndash;</span>
-          <a href="/keystone/signout">Logout</a>
-        {{else}}
-          <a href="/keystone/signin">Admin Login</a>
-        {{/if}}
-      </p>
+          {{#if user}}
+            <a href="/keystone">Admin UI</a>
+            <span class="text-muted">&ndash;</span>
+            <a href="/keystone/signout">Logout</a>
+          {{else}}
+            <a href="/keystone/signin">Admin Login</a>
+          {{/if}}
+        </p>        
+      </div>
     </div>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.6.3/jquery.timeago.min.js"></script>
+    <script>
+      jQuery.timeago.settings.allowFuture = true;
+      
+      $(function() {
+        $("time.timeago").timeago();
+      })
+    </script>
 		{{{isAdminEditorJS user}}}
 	</body>
 </html>
