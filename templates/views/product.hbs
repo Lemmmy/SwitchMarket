@@ -1,0 +1,154 @@
+{{!< default}}
+<div class="container product-page">
+  {{> page-heading title="Products"}}
+  
+  <div class="row">
+    <div class="col-md-4">
+      {{#if product.image}}
+        <img src="/uploads/{{product.image.filename}}" class="product-image img-thumbnail img-fluid" />
+      {{else}}
+        <img src="/images/no-image.png" class="product-image product-no-image img-thumbnail img-fluid" />
+      {{/if}}
+    </div>
+    <div class="col-md-8">
+      <div class="d-flex flex-row align-items-start">
+        <h1 class="mb-0">{{product.name}}</h1>
+        {{#if user}}
+          {{#if user.isAdmin}}
+            <button class="btn btn-primary btn-sm float-right ml-3" data-ks-editable="{{adminEditableUrl user product._id}}">Edit</button>
+          {{/if}}
+        {{/if}}
+        <h3 class="ml-auto">{{> sale-type-badge type=product.saleType class="badge-secondary"}}</h3>
+      </div>
+      
+      {{#if product.createdBy}}
+        <h5 class="font-weight-normal"><span class="text-muted">Seller: </span> {{product.createdBy.name.first}} {{product.createdBy.name.last}}</h5>
+      {{/if}}
+
+      {{#ifeq product.saleType "auction"}}
+        {{#unless product.sold}}
+          <div class="time-left-container">
+            <span class="text-muted">Time left:</span>
+            <b>{{> countdown time=product.endsAt id="time-left"}}</b>
+          </div>
+        {{/unless}}
+      {{/ifeq}}
+      
+      <div class="jumbotron jumbotron-fluid border p-4 mt-4">
+        <div class="d-flex flex-row align-items-baseline">
+          {{#if product.currentBid}}
+            <h2 class="m-0 mr-2" style="line-height: inherit">{{product.currentBid.amount}} KST</h2>
+            <span class="text-muted">{{> timeago time=product.currentBid.createdAt}}</span>
+          {{else if product.reserve}}
+            <h2 class="m-0 mr-2" style="line-height: inherit">{{product.reserve}} KST</h2>
+            <span class="text-muted">Reserve price</span>
+          {{else}}
+            <h2 class="m-0 text-muted" style="line-height: inherit">No bid</h2>
+          {{/if}}
+        </div>
+        
+        <form id="submit-bid-form">
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <input type="text" class="form-control" placeholder="In-game username" id="username" />
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <input type="number" class="form-control" placeholder="Your bid" id="bid-amount" />
+                <div class="input-group-append">
+                  <span class="input-group-text">KST</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <input type="submit" class="btn btn-primary btn-lg btn-block" id="submit-bid" value="Submit">
+        </form>
+        
+        <div class="border bg-light p-3 mt-4 hidden d-none" id="submit-bid-help-container">
+          <h1>Submitting your bid</h1>
+          <p class="mb-0">Send <b id="submit-bid-help-amount">0 KST</b> to <b>{{product.slug}}@{{marketName}}</b> with the following meta:</p>
+          <pre class="p-2 my-2 border bg-dark text-light">username=<span id="submit-bid-help-username"></span></pre>
+        </div>
+        
+        <span class="d-inline-block mt-4 text-muted">Or send your bid in-game to <b>{{product.slug}}@{{marketName}}</b>.</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row mt-4">
+    <div class="col-12 p-4 border">
+      <h4>Product details</h4>
+      {{#ifeq product.productType "claim"}}
+        <h5 class="mb-0 mt-3">Claim dimensions</h5>
+        <table class="w-100">
+          <tr>
+            <td class="w-30">Claim width (X)</td>
+            <td class="w-70">{{size product.startX product.endX}} blocks</td>
+          </tr>
+          <tr>
+            <td class="w-30">Claim height (Y)</td>
+            <td class="w-70">{{size product.startY product.endY}} blocks</td>
+          </tr>
+          <tr>
+            <td class="w-30">Claim depth (Z)</td>
+            <td class="w-70">{{size product.startZ product.endZ}} blocks</td>
+          </tr>
+        </table>
+        <h5 class="mb-0 mt-3">Claim location</h5>
+        <table class="w-100">
+          <tr>
+            <td class="w-30">X</td>
+            <td class="w-70">{{product.startX}} <span class="text-muted mx-2">&ndash;</span> {{product.endX}}</td>
+          </tr>
+          <tr>
+            <td class="w-30">Y</td>
+            <td class="w-70">{{product.startY}} <span class="text-muted mx-2">&ndash;</span> {{product.endY}}</td>
+          </tr>
+          <tr>
+            <td class="w-30">Z</td>
+            <td class="w-70">{{product.startZ}} <span class="text-muted mx-2">&ndash;</span> {{product.endZ}}</td>
+          </tr>
+        </table>
+      {{/ifeq}}
+    </div>
+  </div>
+  
+  {{#if product.description}}
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div class="product-description">
+          {{{product.description.html}}}
+        </div>        
+        {{#if product.updatedAt}}
+          <span class="text-muted">Last updated: {{> timeago time=product.updatedAt}}</span>
+        {{/if}}
+      </div>
+    </div>    
+  {{/if}}
+</div>
+
+{{#section "script"}}
+  <script>
+    $(function() {
+      var $username = $("#username");
+      var $bidAmount = $("#bid-amount");
+      
+      var $submitBidForm = $("#submit-bid-form");
+      
+      var $submitBidHelpContainer = $("#submit-bid-help-container");
+      var $submitBidHelpAmount = $("#submit-bid-help-amount");
+      var $submitBidHelpUsername = $("#submit-bid-help-username");
+      
+      $submitBidHelpContainer.removeClass("d-none").hide();
+
+      $submitBidForm.submit(function() {
+        $submitBidHelpAmount.text($bidAmount.val());
+        $submitBidHelpUsername.text($username.val());
+        $submitBidHelpContainer.slideDown();
+        
+        return false;
+      });
+    });
+  </script>
+{{/section}}

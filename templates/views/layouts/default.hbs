@@ -13,13 +13,15 @@
 	<body>
     <div id="site-header" class="mb-3 border-bottom box-shadow">
       <div id="site-header-inner" class="container bg-white">
-        <div class="row d-flex flex-column flex-md-row align-items-center py-3">
-          <h5 class="my-0 mr-md-auto font-weight-normal"><a href="/" class="text-dark">SwitchMarket</a></h5>
-          <nav class="my-2 my-md-0">
-            {{# each navLinks}}
-              <a class="py-2 pl-4 text-dark {{#ifeq ../section key}}{{else}}{{/ifeq}}" href="{{href}}">{{label}}</a>
-            {{/each}}
-          </nav>          
+        <div class="row">
+          <div class="col-12 d-flex flex-column flex-md-row align-items-center py-3">
+            <h5 class="my-0 mr-md-auto font-weight-normal"><a href="/" class="text-dark">SwitchMarket</a></h5>
+            <nav class="my-2 my-md-0">
+              {{# each navLinks}}
+                <a class="py-2 pl-4 text-dark {{#ifeq ../section key}}{{else}}{{/ifeq}}" href="{{href}}">{{label}}</a>
+              {{/each}}
+            </nav>
+          </div>        
         </div>
       </div>      
     </div>
@@ -53,7 +55,7 @@
 		</div>
     <div id="footer" class="container border-top py-4 mt-4">
       <div class="row">
-        <p>
+        <p class="col-12">
           Created by <a href="https://github.com/Lemmmy/">Lemmmy</a>
           <span class="text-muted">&ndash;</span>
           {{#if user}}
@@ -69,13 +71,29 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.6.3/jquery.timeago.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
     <script>
       jQuery.timeago.settings.allowFuture = true;
       
       $(function() {
         $("time.timeago").timeago();
+        
+        $("[data-countdown]").each(function() {
+          var $this = $(this);
+          var finalDate = $this.data("countdown");
+          
+          $this.countdown(finalDate, function(event) {
+            var format = "%H:%M:%S";
+            
+            if(event.offset.totalDays > 0) format = "%-d day%!d " + format;
+            if(event.offset.weeks > 0) format = "%-w week%!w " + format;
+            
+            $this.text(event.strftime(format));
+          });
+        })
       })
     </script>
+    {{{sections.script}}}
 		{{{isAdminEditorJS user}}}
 	</body>
 </html>

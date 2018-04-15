@@ -1,7 +1,6 @@
 const keystone = require("keystone");
 const Product = keystone.list("Product");
 const p = require("es6-promisify").promisify;
-const util = require("util");
 
 exports = module.exports = async function(req, res) {
   const view = new keystone.View(req, res);
@@ -18,12 +17,6 @@ exports = module.exports = async function(req, res) {
     .populate("currentBid")
     .sort("-createdAt")
     .exec)();
-  
-  console.log(util.inspect(locals.products, {
-    showHidden: true,
-    depth: null,
-    colors: true
-  }));
 
   view.render("products");
 };

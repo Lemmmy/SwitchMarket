@@ -15,9 +15,19 @@ module.exports = function() {
   _helpers.size = function(a, b, options) {
     return Math.abs(b - a);
   };
-  
-  _helpers.timeago = function(a, options) {
-    return new hbs.SafeString(`<time class="timeago" datetime="${hbs.escapeExpression(moment(a).toISOString())}"></time>`);
+
+  _helpers.iso = function(a, options) {
+    return moment(a).toISOString();
+  };
+
+  _helpers.formatTime = function(a, options) {
+    return moment(a).format("YYYY/MM/DD HH:mm:ss");
+  };
+
+  _helpers.section = function(name, options) {
+    if (!this.sections) this.sections = {};
+    this.sections[name] = options.fn(this);
+    return null;
   };
 
   /**
@@ -152,10 +162,12 @@ module.exports = function() {
 	// Used to generate the link for the admin edit post button
   _helpers.adminEditableUrl = function(user, options) {
     const rtn = keystone.app.locals.editable(user, {
-      list: "Post",
+      list: "Product",
       id: options
     });
-    return rtn;
+    const fuck = JSON.parse(rtn);
+    fuck.path = `/${fuck.path}`;
+    return JSON.stringify(fuck);
   };
 
 	// ### CloudinaryUrl Helper
@@ -191,27 +203,6 @@ module.exports = function() {
     else {
       return null;
     }
-  };
-
-	// ### Content Url Helpers
-	// KeystoneJS url handling so that the routes are in one place for easier
-	// editing.  Should look at Django/Ghost which has an object layer to access
-	// the routes by keynames to reduce the maintenance of changing urls
-
-	// Direct url link to a specific post
-  _helpers.postUrl = function(postSlug, options) {
-    return ("/blog/post/" + postSlug);
-  };
-
-	// might be a ghost helper
-	// used for pagination urls on blog
-  _helpers.pageUrl = function(pageNumber, options) {
-    return "/blog?page=" + pageNumber;
-  };
-
-	// create the category url for a blog-category page
-  _helpers.categoryUrl = function(categorySlug, options) {
-    return ("/blog/" + categorySlug);
   };
 
 	// ### Pagination Helpers

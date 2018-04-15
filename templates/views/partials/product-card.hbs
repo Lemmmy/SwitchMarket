@@ -2,9 +2,7 @@
   <div class="card product-card">
     {{#if image}}<a href="/products/{{slug}}"><img class="card-img-top" src="/uploads/{{image.filename}}" /></a>{{/if}}
     <div class="card-body clearfix">
-      {{#ifeq saleType "auction"}}
-        <span class="badge badge-primary float-right text-uppercase">Auction</span>
-      {{/ifeq}}
+      {{> sale-type-badge type=saleType}}
       <a href="/products/{{slug}}"><h5 class="card-title text-dark">{{name}}</h5></a>
       <p class="card-text">
         {{#ifeq productType "claim"}}
@@ -15,13 +13,13 @@
     <div class="card-footer">
       {{#if currentBid}}
         <b>Current bid:</b> {{currentBid.amount}} KST
-        <small class="text-muted">{{timeago currentBid.createdAt}}</small>
+        <small class="text-muted">{{> timeago time=currentBid.createdAt}}</small>
       {{else}}
         <span class="text-muted">No bid yet. <a href="/products/{{slug}}">Bid now!</a></span>
       {{/if}}
       
       <br />
-      <b>Ends:</b> <span class="text-muted">{{timeago endsAt}}</span>
+      <b>Ends:</b> <span class="text-muted">{{> countdown time=endsAt}}</span>
     </div>
   </div>
 </div>
