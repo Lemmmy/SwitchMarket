@@ -13,4 +13,5 @@ exports = module.exports = function(app) {
   app.get("/", routes.views.index);
   app.get("/products", routes.views.products);
   app.get("/products/:slug", routes.views.product);
+  app.post("/krist", routes.views.krist);
 };

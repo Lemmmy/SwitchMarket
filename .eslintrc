@@ -5,6 +5,8 @@
     "quotes": ["error", "double", {"allowTemplateLiterals": true}],
     "comma-dangle": ["error", "never"],
     "indent": ["error", 2],
-    "space-before-function-paren": ["error", "never"]
+    "space-before-function-paren": ["error", "never"],
+    "no-trailing-spaces": ["off"],
+    "no-multi-spaces": ["off"],
   }
 }

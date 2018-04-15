@@ -77,40 +77,42 @@
   </div>
   
   <div class="row mt-4">
-    <div class="col-12 p-4 border">
-      <h4>Product details</h4>
-      {{#ifeq product.productType "claim"}}
-        <h5 class="mb-0 mt-3">Claim dimensions</h5>
-        <table class="w-100">
-          <tr>
-            <td class="w-30">Claim width (X)</td>
-            <td class="w-70">{{size product.startX product.endX}} blocks</td>
-          </tr>
-          <tr>
-            <td class="w-30">Claim height (Y)</td>
-            <td class="w-70">{{size product.startY product.endY}} blocks</td>
-          </tr>
-          <tr>
-            <td class="w-30">Claim depth (Z)</td>
-            <td class="w-70">{{size product.startZ product.endZ}} blocks</td>
-          </tr>
-        </table>
-        <h5 class="mb-0 mt-3">Claim location</h5>
-        <table class="w-100">
-          <tr>
-            <td class="w-30">X</td>
-            <td class="w-70">{{product.startX}} <span class="text-muted mx-2">&ndash;</span> {{product.endX}}</td>
-          </tr>
-          <tr>
-            <td class="w-30">Y</td>
-            <td class="w-70">{{product.startY}} <span class="text-muted mx-2">&ndash;</span> {{product.endY}}</td>
-          </tr>
-          <tr>
-            <td class="w-30">Z</td>
-            <td class="w-70">{{product.startZ}} <span class="text-muted mx-2">&ndash;</span> {{product.endZ}}</td>
-          </tr>
-        </table>
-      {{/ifeq}}
+    <div class="col-12">
+      <div class="p-4 border">
+        <h4>Product details</h4>
+        {{#ifeq product.productType "claim"}}
+          <h5 class="mb-0 mt-3">Claim dimensions</h5>
+          <table class="w-100">
+            <tr>
+              <td class="w-30">Claim width (X)</td>
+              <td class="w-70">{{size product.startX product.endX}} blocks</td>
+            </tr>
+            <tr>
+              <td class="w-30">Claim height (Y)</td>
+              <td class="w-70">{{size product.startY product.endY}} blocks</td>
+            </tr>
+            <tr>
+              <td class="w-30">Claim depth (Z)</td>
+              <td class="w-70">{{size product.startZ product.endZ}} blocks</td>
+            </tr>
+          </table>
+          <h5 class="mb-0 mt-3">Claim location</h5>
+          <table class="w-100">
+            <tr>
+              <td class="w-30">X</td>
+              <td class="w-70">{{product.startX}} <span class="text-muted mx-2">&ndash;</span> {{product.endX}}</td>
+            </tr>
+            <tr>
+              <td class="w-30">Y</td>
+              <td class="w-70">{{product.startY}} <span class="text-muted mx-2">&ndash;</span> {{product.endY}}</td>
+            </tr>
+            <tr>
+              <td class="w-30">Z</td>
+              <td class="w-70">{{product.startZ}} <span class="text-muted mx-2">&ndash;</span> {{product.endZ}}</td>
+            </tr>
+          </table>
+        {{/ifeq}}        
+      </div>
     </div>
   </div>
   
@@ -120,12 +122,43 @@
         <div class="product-description">
           {{{product.description.html}}}
         </div>        
-        {{#if product.updatedAt}}
-          <span class="text-muted">Last updated: {{> timeago time=product.updatedAt}}</span>
-        {{/if}}
       </div>
     </div>    
   {{/if}}
+  
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <h1>Bids</h1>
+      <table class="table table-striped border">
+        <thead>
+          <tr>
+            <th scope="col">Time</th>
+            <th scope="col">Address</th>
+            <th scope="col">Username</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Difference</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#if bids}}
+            {{#each bids}}
+              <tr>
+                <td scope="row">{{> timeago time=createdAt}}</td>
+                <td><a href="https://kristweb.lemmmy.pw/address/{{address}}">{{address}}</a></td>
+                <td>{{username}}</td>
+                <td><b>{{toLocaleString amount}} KST</b></td>
+                <td>{{#ifeq delta 0}}{{else}}<span class="text-muted">+</span>{{/ifeq}}<b>{{toLocaleString delta}} KST</b></td>
+              </tr>
+            {{/each}}
+          {{else}}
+            <tr>
+             <td colspan="5" class="text-muted">No bids yet.</td>
+            </tr>              
+          {{/if}}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 {{#section "script"}}
@@ -143,7 +176,7 @@
       $submitBidHelpContainer.removeClass("d-none").hide();
 
       $submitBidForm.submit(function() {
-        $submitBidHelpAmount.text($bidAmount.val());
+        $submitBidHelpAmount.text(Number($bidAmount.val()).toLocaleString() + " KST");
         $submitBidHelpUsername.text($username.val());
         $submitBidHelpContainer.slideDown();
         

@@ -6,6 +6,7 @@ const cloudinary = require("cloudinary");
 
 // Collection of templates to interpolate
 const linkTemplate = _.template(`<a href="<%= url %>"><%= text %></a>`);
+const paginationLinkTemplate = _.template(`<a href="<%= url %>" class="page-link"><%= text %></a>`);
 const scriptTemplate = _.template(`<script src="<%= src %>"></script>`);
 const cssLinkTemplate = _.template(`<link href="<%= href %>" rel="stylesheet">`);
 
@@ -28,6 +29,10 @@ module.exports = function() {
     if (!this.sections) this.sections = {};
     this.sections[name] = options.fn(this);
     return null;
+  };
+  
+  _helpers.toLocaleString = function(number, options) {
+    return Number(number).toLocaleString();
   };
 
   /**
@@ -91,45 +96,6 @@ module.exports = function() {
       date = moment(context).format(f);
     }
     return date;
-  };
-
-	// ### Category Helper
-	// Ghost uses Tags and Keystone uses Categories
-	// Supports same interface, just different name/semantics
-	//
-	// *Usage example:*
-	// `{{categoryList categories separator=' - ' prefix='Filed under '}}`
-	//
-	// Returns an html-string of the categories on the post.
-	// By default, categories are separated by commas.
-	// input. categories:['tech', 'js']
-	// output. 'Filed Undder <a href="blog/tech">tech</a>, <a href="blog/js">js</a>'
-
-  _helpers.categoryList = function(categories, options) {
-    const autolink = _.isString(options.hash.autolink) && options.hash.autolink === "false" ? false : true;
-    const separator = _.isString(options.hash.separator) ? options.hash.separator : ", ";
-    const prefix = _.isString(options.hash.prefix) ? options.hash.prefix : "";
-    const suffix = _.isString(options.hash.suffix) ? options.hash.suffix : "";
-    let output = "";
-
-    function createTagList(tags) {
-      const tagNames = _.map(tags, "name");
-
-      if (autolink) {
-        return _.map(tags, function(tag) {
-          return linkTemplate({
-            url: ("/blog/" + tag.key),
-            text: _.escape(tag.name)
-          });
-        }).join(separator);
-      }
-      return _.escape(tagNames.join(separator));
-    }
-
-    if (categories && categories.length) {
-      output = prefix + createTagList(categories) + suffix;
-    }
-    return new hbs.SafeString(output);
   };
 
 	/**
@@ -205,7 +171,15 @@ module.exports = function() {
     }
   };
 
-	// ### Pagination Helpers
+  _helpers.productUrl = function(postSlug, options) {
+    return ("/product/" + postSlug);
+  };
+
+  _helpers.pageUrl = function(pageNumber, options) {
+    return "/products?page=" + pageNumber;
+  };
+
+    // ### Pagination Helpers
 	// These are helpers used in rendering a pagination system for content
 	// Mostly generalized and with a small adjust to `_helper.pageUrl` could be universal for content types
 
@@ -236,7 +210,7 @@ module.exports = function() {
       // create boolean flag state if currentPage
       const isActivePage = ((page === currentPage) ? true : false);
       // need an active class indicator
-      const liClass = ((isActivePage) ? " class=\"active\"" : "");
+      const liClass = ((isActivePage) ? " class=\"page-item active\"" : " class=\"page-item\"");
 
       // if '...' is sent from keystone then we need to override the url
       if (page === "...") {
@@ -247,7 +221,7 @@ module.exports = function() {
 			// get the pageUrl using the integer value
       const pageUrl = _helpers.pageUrl(page);
       // wrapup the html
-      html += "<li" + liClass + ">" + linkTemplate({ url: pageUrl, text: pageText }) + "</li>\n";
+      html += "<li" + liClass + ">" + paginationLinkTemplate({ url: pageUrl, text: pageText }) + "</li>\n";
     });
     return html;
   };

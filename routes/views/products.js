@@ -10,7 +10,7 @@ exports = module.exports = async function(req, res) {
 
   locals.products = await p(Product.paginate({
     page: req.query.page || 1,
-    perPage: 10,
+    perPage: 12,
     maxPages: 5
   })
     .where("sold", false)
