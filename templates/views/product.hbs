@@ -1,11 +1,12 @@
 {{!< default}}
+<input type="hidden" id="product-id" value="{{product._id}}" />
 <div class="container product-page">
   {{> page-heading title="Products"}}
   
   <div class="row">
     <div class="col-md-4">
       {{#if product.image.filename}}
-        <img src="/uploads/{{product.image.filename}}" class="product-image img-thumbnail img-fluid" />
+        <a href="/uploads/{{product.image.filename}}" data-lightbox="product-image" data-title="{{name}}"><img src="/uploads/{{product.image.filename}}" class="product-image img-thumbnail img-fluid" /></a>
       {{else}}
         <img src="/images/no-image.png" class="product-image product-no-image img-thumbnail img-fluid" />
       {{/if}}
@@ -35,43 +36,62 @@
       {{/ifeq}}
       
       <div class="jumbotron jumbotron-fluid border p-4 mt-4">
-        <div class="d-flex flex-row align-items-baseline">
+        {{#if product.sold}}
           {{#if product.currentBid}}
-            <h2 class="m-0 mr-2" style="line-height: inherit">{{product.currentBid.amount}} KST</h2>
-            <span class="text-muted">{{> timeago time=product.currentBid.createdAt}}</span>
-          {{else if product.reserve}}
-            <h2 class="m-0 mr-2" style="line-height: inherit">{{product.reserve}} KST</h2>
-            <span class="text-muted">Reserve price</span>
+            <h2 class="m-0 text-center" style="line-height: inherit">Sold for {{product.currentBid.amount}} KST!</h2>
+          
+            <table class="w-100">
+              <tr>
+                <td><b>To</b></td>
+                <td>{{product.currentBid.username}} ({{product.currentBid.address}})</td>
+              </tr>
+              <tr>
+                <td><b>Time</b></td>
+                <td>{{> timeago time=product.currentBid.createdAt}}</td>
+              </tr>
+            </table>
           {{else}}
-            <h2 class="m-0 text-muted" style="line-height: inherit">No bid</h2>
+            <h2 class="m-0 text-muted" style="line-height: inherit">Auction ended.</h2>
           {{/if}}
-        </div>
-        
-        <form id="submit-bid-form">
-          <div class="row mb-4">
-            <div class="col-md-6">
-              <input type="text" class="form-control" placeholder="In-game username" id="username" />
-            </div>
-            <div class="col-md-6">
-              <div class="input-group">
-                <input type="number" class="form-control" placeholder="Your bid" id="bid-amount" />
-                <div class="input-group-append">
-                  <span class="input-group-text">KST</span>
+        {{else}}
+          <div class="d-flex flex-row align-items-baseline">
+            {{#if product.currentBid}}
+              <h2 class="m-0 mr-2" style="line-height: inherit">{{product.currentBid.amount}} KST</h2>
+              <span class="text-muted">{{> timeago time=product.currentBid.createdAt}}</span>
+            {{else if product.reserve}}
+              <h2 class="m-0 mr-2" style="line-height: inherit">{{product.reserve}} KST</h2>
+              <span class="text-muted">Reserve price</span>
+            {{else}}
+              <h2 class="m-0 text-muted" style="line-height: inherit">No bid</h2>
+            {{/if}}
+          </div>
+
+          <form id="submit-bid-form">
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <input type="text" class="form-control" placeholder="In-game username" id="username" />
+              </div>
+              <div class="col-md-6">
+                <div class="input-group">
+                  <input type="number" class="form-control" placeholder="Your bid" id="bid-amount" />
+                  <div class="input-group-append">
+                    <span class="input-group-text">KST</span>
+                  </div>
                 </div>
               </div>
             </div>
+
+            <input type="submit" class="btn btn-primary btn-lg btn-block" id="submit-bid" value="Submit">
+          </form>
+
+          <div class="border bg-light p-3 mt-4 hidden d-none" id="submit-bid-help-container">
+            <h1>Submitting your bid</h1>
+            <p class="mb-0">Send <b id="submit-bid-help-amount">0 KST</b> to <b>{{product.slug}}@{{marketName}}</b> with the following meta:</p>
+            <pre class="p-2 my-2 border bg-dark text-light">username=<span id="submit-bid-help-username"></span></pre>
           </div>
 
-          <input type="submit" class="btn btn-primary btn-lg btn-block" id="submit-bid" value="Submit">
-        </form>
-        
-        <div class="border bg-light p-3 mt-4 hidden d-none" id="submit-bid-help-container">
-          <h1>Submitting your bid</h1>
-          <p class="mb-0">Send <b id="submit-bid-help-amount">0 KST</b> to <b>{{product.slug}}@{{marketName}}</b> with the following meta:</p>
-          <pre class="p-2 my-2 border bg-dark text-light">username=<span id="submit-bid-help-username"></span></pre>
-        </div>
-        
-        <span class="d-inline-block mt-4 text-muted">Or send your bid in-game to <b>{{product.slug}}@{{marketName}}</b>.</span>
+          <span class="d-inline-block mt-4 text-muted">Or send your bid in-game to <b>{{product.slug}}@{{marketName}}</b>.</span>          
+        {{/if}}
       </div>
     </div>
   </div>

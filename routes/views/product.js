@@ -32,12 +32,6 @@ exports = module.exports = async function(req, res) {
           : 0
       };
     });
-
-    console.log(require("util").inspect(locals.bids, {
-      colors: true,
-      showHidden: true,
-      depth: null
-    }));
     
     view.render("product");
   }

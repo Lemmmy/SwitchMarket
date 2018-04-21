@@ -32,3 +32,17 @@ Product.add({
 
 Product.defaultColumns = "name, saleType, productType, sold, currentBid";
 Product.register();
+
+const scheduler = require("../sale-scheduler"); // fuck it
+
+Product.schema.post("save", product => {
+  console.log(require("util").inspect(product, {
+    colors: true,
+    showHidden: true,
+    depth: null
+  }));
+  
+  if (!product.sold) scheduler.updateProduct(product).catch(console.error);
+});
+
+scheduler.start().catch(console.error);

@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const keystone = require("keystone");
 const handlebars = require("express-handlebars");
+const websockets = require("./websockets");
 
 module.exports.storage = new keystone.Storage({
   adapter: keystone.Storage.Adapters.FS,
@@ -42,6 +43,7 @@ keystone.set("locals", {
   utils: keystone.utils,
   editable: keystone.content.editable
 });
+
 keystone.set("routes", require("./routes"));
 
 keystone.set("nav", {
@@ -50,4 +52,8 @@ keystone.set("nav", {
   products: "products"
 });
 
-keystone.start();
+keystone.start({
+  onStart() {
+    websockets.start();
+  }
+});

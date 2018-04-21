@@ -1,17 +1,22 @@
+const _ = require("lodash");
+
 const keystone = require("keystone");
 const Product = keystone.list("Product");
 const Bid = keystone.list("Bid");
 
 const request = require("request-promise");
 const kristUtils = require("krist-utils");
+const moment = require("moment");
 
 const PRIVATEKEY = process.env.KRIST_PRIVATEKEY;
 const ADDRESS = kristUtils.makeV2Address(PRIVATEKEY);
 const WEBHOOK_TOKEN = process.env.KRIST_WEBHOOK_TOKEN;
 
-console.log(ADDRESS);
+let io;
 
 exports = module.exports = async function(req, res) {
+  if (!io) io = keystone.get("io");
+  
   if (
        !req.body 
     || !req.body.token 
@@ -21,12 +26,6 @@ exports = module.exports = async function(req, res) {
     || !req.body.transaction
     ||  req.body.transaction.to !== ADDRESS
   ) return res.status(400).send("die");
-  
-  console.log(require("util").inspect(req.body, {
-    colors: true,
-    showHidden: true,
-    depth: null
-  }));
 
   const transaction = req.body.transaction;
   const meta = kristUtils.parseCommonMeta(transaction.metadata);
@@ -48,7 +47,7 @@ exports = module.exports = async function(req, res) {
   if (!meta) return await refundTransaction("Could not parse CommonMeta");
   if (!meta.username) return await refundTransaction("Username not specified");
   if (!meta.metaname) return await refundTransaction("Metaname not specified");
-  
+    
   const metaname = meta.metaname;
   const product = await Product.model.findOne({
     slug: metaname
@@ -57,6 +56,7 @@ exports = module.exports = async function(req, res) {
     .exec();
   
   if (!product) return await refundTransaction("Product not found");
+  if (product.sold || moment().isAfter(moment(product.endsAt))) return await refundTransaction("Auction already over");
   
   if (product.currentBid) {
     const currentBid = product.currentBid;
@@ -75,7 +75,7 @@ exports = module.exports = async function(req, res) {
   }
 
   if (product.reserve && req.body.transaction.value < product.reserve) return await refundTransaction("Must be above reserve price");
-  
+
   const newBid = new Bid.model({
     item: product,
     address: req.body.transaction.from,
@@ -84,8 +84,10 @@ exports = module.exports = async function(req, res) {
   });
   await newBid.save();
   
-  product.currentBid = newBid;
+  product.currentBid = newBid._id;
   await product.save();
+  
+  io.sockets.emit("bid", _.omit(product, ["createdBy", "updatedBy"]));
   
   return res.send("ya");
 };

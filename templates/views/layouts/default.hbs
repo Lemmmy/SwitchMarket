@@ -7,6 +7,7 @@
 		<title>SwitchMarket</title>
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 		<link href="/styles/site.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/css/lightbox.min.css" rel="stylesheet">
 
 		{{{isAdminEditorCSS user}}}
 	</head>
@@ -15,7 +16,12 @@
       <div id="site-header-inner" class="container bg-white">
         <div class="row">
           <div class="col-12 d-flex flex-column flex-md-row align-items-center py-3">
-            <h5 class="my-0 mr-md-auto font-weight-normal"><a href="/" class="text-dark">SwitchMarket</a></h5>
+            <div class="d-flex flex-row align-items-center mr-md-auto">
+              <h5 class="my-0 font-weight-normal d-flex flex-row">
+                <a href="/" class="text-dark">SwitchMarket</a>
+              </h5>
+              <h6 class="text-warning text-uppercase font-weight-bold ml-1 mb-0">Beta</h6>              
+            </div>
             <nav class="my-2 my-md-0">
               {{# each navLinks}}
                 <a class="py-2 pl-4 text-dark {{#ifeq ../section key}}{{else}}{{/ifeq}}" href="{{href}}">{{label}}</a>
@@ -50,6 +56,13 @@
           {{/if}}
         </div>
 			{{/if}}
+      
+      <div class="container">
+        <div class="alert alert-primary">
+          Welcome to the SwitchMarket beta! Please report all bugs on <a href="https://github.com/Lemmmy/SwitchMarket/issues">GitHub</a>. Thanks!<br/>
+          <b>Note</b>: Unimplemented features are not bugs.
+        </div>        
+      </div>
 			
 			{{{body}}}
 		</div>
@@ -72,7 +85,11 @@
 		<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.6.3/jquery.timeago.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/js/lightbox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.slim.js"></script>
     <script>
+      var socket = io();
+      
       jQuery.timeago.settings.allowFuture = true;
       
       $(function() {
@@ -90,7 +107,23 @@
             
             $this.text(event.strftime(format));
           });
-        })
+        });
+        
+        socket.on("sold", function() {
+          setTimeout(function() {
+            location.reload();
+          }, 1000);
+        });
+
+        socket.on("bid", function(product) {
+          const id = $("#product-id");
+          
+          if (id && id.val() === product._id) {
+            setTimeout(function() {
+              location.reload();
+            }, 1000);
+          }
+        });
       })
     </script>
     {{{sections.script}}}
