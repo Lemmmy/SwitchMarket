@@ -3,6 +3,7 @@ require("dotenv").config();
 const keystone = require("keystone");
 const handlebars = require("express-handlebars");
 const websockets = require("./websockets");
+const request = require("request-promise");
 
 module.exports.storage = new keystone.Storage({
   adapter: keystone.Storage.Adapters.FS,
@@ -10,6 +11,26 @@ module.exports.storage = new keystone.Storage({
     path: keystone.expandPath("./public/uploads"),
     publicPath: "/uploads"
   }
+});
+
+keystone.set("log", function(message, product) {
+  if (!process.env.DISCORD_WEBHOOK) return;
+  const serverURL = process.env.SERVER_URL || "https://market.switchcraft.pw";
+  let content = message;
+
+  if (product) {
+    content += `\n**[Listing](${serverURL}/products/${product.slug})**`;
+    content += ` | **[Admin](${serverURL}/keystone/products/${product._id})**`;
+  }
+  
+  request(process.env.DISCORD_WEBHOOK, {
+    method: "POST",
+    body: { content },
+    json: true
+  }).catch(error => {
+    console.error("Error logging to discord:");
+    console.error(error);
+  });
 });
 
 keystone.init({
