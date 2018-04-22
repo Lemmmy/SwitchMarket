@@ -25,7 +25,12 @@ async function markAsSold(oldProduct) {
 
     if (product.currentBid) {
       await product.populate("currentBid").execPopulate();
-      keystone.get("log")(`:white_check_mark: **${product.name}** sold for **${product.currentBid.amount} KST** to **${product.currentBid.username}** (${product.currentBid.address})!`, product);      
+      
+      if (product.currentBid.amount >= (product.reserve || 0)) {
+        keystone.get("log")(`:white_check_mark: **${product.name}** sold for **${product.currentBid.amount} KST** to **${product.currentBid.username}** (${product.currentBid.address})!`, product);
+      } else {
+        keystone.get("log")(`:x: Auction for **${product.name}** ended but did not meet the reserve price.`, product);
+      }
     } else {
       keystone.get("log")(`:x: Auction for **${product.name}** ended with no bids.`, product);
     }

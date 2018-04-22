@@ -17,6 +17,18 @@ module.exports = function() {
     return Math.abs(b - a);
   };
 
+  _helpers.area = function(a, b, c, d, options) {
+    return Math.abs(b - a) * Math.abs(d - c);
+  };
+
+  _helpers.volume = function(a, b, c, d, e, f, options) {
+    return Math.abs(b - a) * Math.abs(d - c) * Math.abs(f - e);
+  };
+
+  _helpers.showVolume = function(a, b, options) {
+    return Math.min(a, b) !== 0 || Math.max(a, b) !== 255;
+  };
+  
   _helpers.iso = function(a, options) {
     return moment(a).toISOString();
   };
@@ -33,6 +45,10 @@ module.exports = function() {
   
   _helpers.toLocaleString = function(number, options) {
     return Number(number).toLocaleString();
+  };
+  
+  _helpers.gte = function(a, b, options) {
+    return Number(a) >= Number(b);
   };
 
   /**

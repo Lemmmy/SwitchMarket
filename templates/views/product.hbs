@@ -58,12 +58,19 @@
             {{#if product.currentBid}}
               <h2 class="m-0 mr-2" style="line-height: inherit">{{product.currentBid.amount}} KST</h2>
               <span class="text-muted">{{> timeago time=product.currentBid.createdAt}}</span>
-            {{else if product.reserve}}
-              <h2 class="m-0 mr-2" style="line-height: inherit">{{product.reserve}} KST</h2>
-              <span class="text-muted">Reserve price</span>
             {{else}}
               <h2 class="m-0 text-muted" style="line-height: inherit">No bid</h2>
             {{/if}}
+          </div>
+        
+          <div class="mb-4">
+            {{#if product.reserve}}
+              {{#if (gte product.currentBid.amount product.reserve)}}
+                <span class="text-muted">This bid is above the reserve price.</span>
+              {{else}}
+                <span class="text-danger">This bid is below the reserve price.</span>
+              {{/if}}
+            {{/if}}            
           </div>
 
           <form id="submit-bid-form">
@@ -115,6 +122,16 @@
               <td class="w-30">Claim depth (Z)</td>
               <td class="w-70">{{size product.startZ product.endZ}} blocks</td>
             </tr>
+            <tr>
+              <td class="w-30">Claim area</td>
+              <td class="w-70">{{area product.startX product.endX product.startZ product.endZ}} blocks&sup2;</td>
+            </tr>
+            {{#if (showVolume product.startY product.endY)}}
+              <tr>
+                <td class="w-30">Claim volume</td>
+                <td class="w-70">{{volume product.startX product.endX product.startY product.endY product.startZ product.endZ}} blocks&sup3;</td>
+              </tr>              
+            {{/if}} 
           </table>
           <h5 class="mb-0 mt-3">Claim location</h5>
           <table class="w-100">

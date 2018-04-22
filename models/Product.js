@@ -17,6 +17,7 @@ Product.add({
   productType: { type: Types.Select, options: "claim" },
   sold: { type: Boolean, default: false },
   reserve: { type: Number, default: 0, dependsOn: { saleType: "auction" } },
+  extensionMinutes: { type: Number, default: 30, dependsOn: { saleType: "auction" } },
   currentBid: { type: Types.Relationship, ref: "Bid", required: false },
   endsAt: { type: Date, default: moment().add(3, "days") },
   world: { type: String, default: "world" },

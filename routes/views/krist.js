@@ -41,7 +41,7 @@ exports = module.exports = async function(req, res) {
   
   async function refundTransaction(refundReason) {
     refundReason += ` (send to \`product@${res.locals.marketName}\` to bid)`;
-    await sendTransaction(req.body.transaction.from, req.body.transaction.value, `error=${refundReason}`);
+    await sendTransaction(meta && meta.return ? meta.return : req.body.transaction.from, req.body.transaction.value, `error=${refundReason}`);
   }
   
   if (!meta) return await refundTransaction("Could not parse CommonMeta");
@@ -56,7 +56,11 @@ exports = module.exports = async function(req, res) {
     .exec();
   
   if (!product) return await refundTransaction("Product not found");
-  if (product.sold || moment().isAfter(moment(product.endsAt))) return await refundTransaction("Auction already over");
+
+  const now = moment();
+  const ends = moment(product.endsAt);
+  
+  if (product.sold || now.isAfter(ends)) return await refundTransaction("Auction already over");
   
   if (product.currentBid) {
     const currentBid = product.currentBid;
@@ -74,17 +78,21 @@ exports = module.exports = async function(req, res) {
     );
   }
 
-  if (product.reserve && req.body.transaction.value < product.reserve) return await refundTransaction("Must be above reserve price");
-
   const newBid = new Bid.model({
     item: product,
-    address: req.body.transaction.from,
+    address: meta.return || req.body.transaction.from,
     amount: req.body.transaction.value,
     username: meta.username
   });
   await newBid.save();
   
   product.currentBid = newBid._id;
+  
+  if (product.extensionMinutes > 0 && moment(now).add(product.extensionMinutes, "minutes").isAfter(ends)) {
+    console.log(`Extending ${product.name}'s time`);
+    product.endsAt = moment(now).add(product.extensionMinutes, "minutes").toDate();
+  }
+  
   await product.save();
   
   io.sockets.emit("bid", _.omit(product, ["createdBy", "updatedBy"]));
