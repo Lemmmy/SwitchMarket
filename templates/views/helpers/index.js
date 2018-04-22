@@ -3,6 +3,7 @@ const _ = require("lodash");
 const hbs = require("handlebars");
 const keystone = require("keystone");
 const cloudinary = require("cloudinary");
+const krist = require("krist-utils");
 
 // Collection of templates to interpolate
 const linkTemplate = _.template(`<a href="<%= url %>"><%= text %></a>`);
@@ -18,15 +19,19 @@ module.exports = function() {
   };
 
   _helpers.area = function(a, b, c, d, options) {
-    return Math.abs(b - a) * Math.abs(d - c);
+    return (Math.abs(b - a) * Math.abs(d - c));
   };
 
   _helpers.volume = function(a, b, c, d, e, f, options) {
-    return Math.abs(b - a) * Math.abs(d - c) * Math.abs(f - e);
+    return (Math.abs(b - a) * Math.abs(d - c) * Math.abs(f - e));
   };
 
   _helpers.showVolume = function(a, b, options) {
-    return Math.min(a, b) !== 0 || Math.max(a, b) !== 255;
+    return (Math.min(a, b) !== 0 || Math.max(a, b) !== 255);
+  };
+  
+  _helpers.acres = function(a, options) {
+    return (Number(a) * 0.000247105);
   };
   
   _helpers.iso = function(a, options) {
@@ -50,7 +55,19 @@ module.exports = function() {
   _helpers.gte = function(a, b, options) {
     return Number(a) >= Number(b);
   };
+  
+  _helpers.krist = function(a, options) {
+    return Number(a).toLocaleString() + " KST";
+  };
 
+  _helpers.kristweb = function(a, options) {
+    if (krist.isValidKristAddress(a)) {
+      return `https://kristweb.lemmmy.pw/addresses/${a}`;
+    } else if (/^(?:[a-z0-9-_]{1,32}@)?[a-z0-9]{1,64}\.kst$/.test(a)) {
+      return `https://kristweb.lemmmy.pw/names/${a}`;      
+    }
+  };
+  
   /**
 	 * Generic HBS Helpers
 	 * ===================

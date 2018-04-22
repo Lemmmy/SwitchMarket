@@ -12,7 +12,7 @@
     </div>
     <div class="card-footer">
       {{#if currentBid}}
-        <b>Current bid:</b> {{currentBid.amount}} KST
+        <b>Current bid:</b> {{krist currentBid.amount}}
         <small class="text-muted">{{> timeago time=currentBid.createdAt}}</small>
       {{else}}
         <span class="text-muted">No bid yet. <a href="/products/{{slug}}">Bid now!</a></span>

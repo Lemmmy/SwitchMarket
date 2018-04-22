@@ -38,25 +38,59 @@
       <div class="jumbotron jumbotron-fluid border p-4 mt-4">
         {{#if product.sold}}
           {{#if product.currentBid}}
-            <h2 class="m-0 text-center" style="line-height: inherit">Sold for {{product.currentBid.amount}} KST!</h2>
-          
-            <table class="w-100">
-              <tr>
-                <td><b>To</b></td>
-                <td>{{product.currentBid.username}} ({{product.currentBid.address}})</td>
-              </tr>
-              <tr>
-                <td><b>Time</b></td>
-                <td>{{> timeago time=product.currentBid.createdAt}}</td>
-              </tr>
-            </table>
+            {{#if product.reserve}}
+              {{#if (gte product.currentBid.amount product.reserve)}}
+                <h2 class="m-0 text-center text-primary" style="line-height: inherit">Sold for: <b>{{krist product.currentBid.amount}}</b></h2>
+
+                <table class="w-100">
+                  <tr>
+                    <td><b>To</b></td>
+                    <td>{{product.currentBid.username}} (<a target="_blank" href="{{kristweb product.currentBid.address}}">{{product.currentBid.address}}</a>)</td>
+                  </tr>
+                  <tr>
+                    <td><b>Time</b></td>
+                    <td>{{> timeago time=product.endsAt}}</td>
+                  </tr>
+                </table>                
+              {{else}}
+                <h2 class="m-0 text-center text-muted" style="line-height: inherit">The auction ended unsold.</h2>
+
+                <table class="w-100">
+                  <tr>
+                    <td><b>Top bid</b></td>
+                    <td>{{krist product.currentBid.amount}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>From</b></td>
+                    <td>{{product.currentBid.username}} (<a target="_blank" href="{{kristweb product.currentBid.address}}">{{product.currentBid.address}}</a>)</td>
+                  </tr>
+                  <tr>
+                    <td><b>Time</b></td>
+                    <td>{{> timeago time=product.endsAt}}</td>
+                  </tr>
+                </table>                
+              {{/if}}
+            {{else}}
+              <h2 class="m-0 text-center text-primary" style="line-height: inherit">Sold for: <b>{{krist product.currentBid.amount}}</b></h2>
+
+              <table class="w-100">
+                <tr>
+                  <td><b>To</b></td>
+                  <td>{{product.currentBid.username}} (<a target="_blank" href="{{kristweb product.currentBid.address}}">{{product.currentBid.address}}</a>)</td>
+                </tr>
+                <tr>
+                  <td><b>Time</b></td>
+                  <td>{{> timeago time=product.endsAt}}</td>
+                </tr>
+              </table>              
+            {{/if}}
           {{else}}
-            <h2 class="m-0 text-muted" style="line-height: inherit">Auction ended.</h2>
+            <h2 class="m-0 text-muted" style="line-height: inherit">The auction ended unsold.</h2>
           {{/if}}
         {{else}}
           <div class="d-flex flex-row align-items-baseline">
             {{#if product.currentBid}}
-              <h2 class="m-0 mr-2" style="line-height: inherit">{{product.currentBid.amount}} KST</h2>
+              <h2 class="m-0 mr-2 {{#if product.reserve}}{{#if (gte product.currentBid.amount product.reserve)}}text-success{{/if}}{{/if}}" style="line-height: inherit">{{krist product.currentBid.amount}}</h2>
               <span class="text-muted">{{> timeago time=product.currentBid.createdAt}}</span>
             {{else}}
               <h2 class="m-0 text-muted" style="line-height: inherit">No bid</h2>
@@ -66,9 +100,9 @@
           <div class="mb-4">
             {{#if product.reserve}}
               {{#if (gte product.currentBid.amount product.reserve)}}
-                <span class="text-muted">This bid is above the reserve price.</span>
+                <span class="text-success">The reserve price has been met. <span class="octicon octicon-check"></span></span>
               {{else}}
-                <span class="text-danger">This bid is below the reserve price.</span>
+                <span class="text-muted">The reserve price has not been met.</span>
               {{/if}}
             {{/if}}            
           </div>
@@ -108,44 +142,47 @@
       <div class="p-4 border">
         <h4>Product details</h4>
         {{#ifeq product.productType "claim"}}
-          <h5 class="mb-0 mt-3">Claim dimensions</h5>
+          <h5 class="mb-0 mt-3 w-100 border-bottom mb-2">Claim dimensions</h5>
           <table class="w-100">
             <tr>
-              <td class="w-30">Claim width (X)</td>
-              <td class="w-70">{{size product.startX product.endX}} blocks</td>
+              <td class="w-30 align-text-top font-weight-bold">Width (X)</td>
+              <td class="w-70">{{toLocaleString (size product.startX product.endX)}}m</td>
             </tr>
             <tr>
-              <td class="w-30">Claim height (Y)</td>
-              <td class="w-70">{{size product.startY product.endY}} blocks</td>
+              <td class="w-30 align-text-top font-weight-bold">Height (Y)</td>
+              <td class="w-70">{{toLocaleString (size product.startY product.endY)}}m</td>
             </tr>
             <tr>
-              <td class="w-30">Claim depth (Z)</td>
-              <td class="w-70">{{size product.startZ product.endZ}} blocks</td>
+              <td class="w-30 align-text-top font-weight-bold">Depth (Z)</td>
+              <td class="w-70">{{toLocaleString (size product.startZ product.endZ)}}m</td>
             </tr>
             <tr>
-              <td class="w-30">Claim area</td>
-              <td class="w-70">{{area product.startX product.endX product.startZ product.endZ}} blocks&sup2;</td>
+              <td class="w-30 align-text-top font-weight-bold">Area</td>
+              <td class="w-70">
+                {{toLocaleString (area product.startX product.endX product.startZ product.endZ)}}m&sup2;<br />
+                (&#8776;{{toLocaleString (acres (area product.startX product.endX product.startZ product.endZ))}} acres)
+              </td>
             </tr>
             {{#if (showVolume product.startY product.endY)}}
               <tr>
-                <td class="w-30">Claim volume</td>
-                <td class="w-70">{{volume product.startX product.endX product.startY product.endY product.startZ product.endZ}} blocks&sup3;</td>
+                <td class="w-30 align-text-top font-weight-bold">Volume</td>
+                <td class="w-70">{{toLocaleString (volume product.startX product.endX product.startY product.endY product.startZ product.endZ)}}m&sup3;</td>
               </tr>              
             {{/if}} 
           </table>
-          <h5 class="mb-0 mt-3">Claim location</h5>
+          <h5 class="mb-0 mt-3 w-100 border-bottom mb-2">Claim location</h5>
           <table class="w-100">
             <tr>
-              <td class="w-30">X</td>
-              <td class="w-70">{{product.startX}} <span class="text-muted mx-2">&ndash;</span> {{product.endX}}</td>
+              <td class="w-30 align-text-top font-weight-bold">X</td>
+              <td class="w-70">{{toLocaleString product.startX}} <span class="text-muted mx-2">&ndash;</span> {{toLocaleString product.endX}}</td>
             </tr>
             <tr>
-              <td class="w-30">Y</td>
-              <td class="w-70">{{product.startY}} <span class="text-muted mx-2">&ndash;</span> {{product.endY}}</td>
+              <td class="w-30 align-text-top font-weight-bold">Y</td>
+              <td class="w-70">{{toLocaleString product.startY}} <span class="text-muted mx-2">&ndash;</span> {{toLocaleString product.endY}}</td>
             </tr>
             <tr>
-              <td class="w-30">Z</td>
-              <td class="w-70">{{product.startZ}} <span class="text-muted mx-2">&ndash;</span> {{product.endZ}}</td>
+              <td class="w-30 align-text-top font-weight-bold">Z</td>
+              <td class="w-70">{{toLocaleString product.startZ}} <span class="text-muted mx-2">&ndash;</span> {{toLocaleString product.endZ}}</td>
             </tr>
           </table>
         {{/ifeq}}        
@@ -181,10 +218,10 @@
             {{#each bids}}
               <tr>
                 <td scope="row">{{> timeago time=createdAt}}</td>
-                <td><a href="https://kristweb.lemmmy.pw/address/{{address}}">{{address}}</a></td>
+                <td><a target="_blank" href="{{kristweb address}}">{{address}}</a></td>
                 <td>{{username}}</td>
-                <td><b>{{toLocaleString amount}} KST</b></td>
-                <td>{{#ifeq delta 0}}{{else}}<span class="text-muted">+</span>{{/ifeq}}<b>{{toLocaleString delta}} KST</b></td>
+                <td><b>{{krist amount}}</b></td>
+                <td>{{#ifeq delta 0}}{{else}}<span class="text-muted">+</span>{{/ifeq}}<b>{{krist delta}}</b></td>
               </tr>
             {{/each}}
           {{else}}
