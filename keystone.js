@@ -76,5 +76,7 @@ keystone.set("nav", {
 keystone.start({
   onStart() {
     websockets.start();
+    const scheduler = require("./sale-scheduler");
+    scheduler.start().catch(console.error);
   }
 });

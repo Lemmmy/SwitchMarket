@@ -50,7 +50,8 @@ exports = module.exports = async function(req, res) {
     
   const metaname = meta.metaname;
   const product = await Product.model.findOne({
-    slug: metaname
+    slug: metaname,
+    visible: true
   })
     .populate("currentBid")
     .exec();
@@ -58,9 +59,8 @@ exports = module.exports = async function(req, res) {
   if (!product) return await refundTransaction("Product not found");
 
   const now = moment();
-  const ends = moment(product.endsAt);
   
-  if (product.sold || now.isAfter(ends)) return await refundTransaction("Auction already over");
+  if (product.sold || (product.endsAt && now.isAfter(product.endsAt))) return await refundTransaction("Auction already over");
   
   if (product.currentBid) {
     const currentBid = product.currentBid;
@@ -88,7 +88,12 @@ exports = module.exports = async function(req, res) {
   
   product.currentBid = newBid._id;
   
-  if (product.extensionMinutes > 0 && moment(now).add(product.extensionMinutes, "minutes").isAfter(ends)) {
+  if (!product.endsAt && product.auctionDurationMinutes) {
+    console.log(`Setting ${product.name}'s time to ${product.auctionDurationMinutes}`);
+    product.endsAt = moment(now).add(product.auctionDurationMinutes, "minutes").toDate();    
+  }
+  
+  if (product.extensionMinutes > 0 && moment(now).add(product.extensionMinutes, "minutes").isAfter(product.endsAt)) {
     console.log(`Extending ${product.name}'s time`);
     product.endsAt = moment(now).add(product.extensionMinutes, "minutes").toDate();
   }

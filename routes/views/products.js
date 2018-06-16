@@ -14,6 +14,7 @@ exports = module.exports = async function(req, res) {
     maxPages: 5
   })
     .where("sold", false)
+    .where("visible", true)
     .populate("currentBid")
     .sort("-createdAt")
     .exec)();

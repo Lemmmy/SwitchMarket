@@ -19,7 +19,9 @@
       {{/if}}
       
       <br />
-      <b>Ends:</b> <span class="text-muted">{{> countdown time=endsAt}}</span>
+      {{#if endsAt}}
+        <b>Ends:</b> <span class="text-muted">{{> countdown time=endsAt}}</span>
+      {{/if}}
     </div>
   </div>
 </div>

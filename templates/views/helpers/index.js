@@ -31,7 +31,7 @@ module.exports = function() {
   };
   
   _helpers.acres = function(a, options) {
-    return (Number(a) * 0.000247105);
+    return (Number(a) * 0.000247105).toFixed(2);
   };
   
   _helpers.iso = function(a, options) {
@@ -66,6 +66,14 @@ module.exports = function() {
     } else if (/^(?:[a-z0-9-_]{1,32}@)?[a-z0-9]{1,64}\.kst$/.test(a)) {
       return `https://kristweb.lemmmy.pw/names/${a}`;      
     }
+  };
+  
+  _helpers.center = function(a, b, options) {
+    return Math.floor((Number(a) + Number(b)) / 2);
+  };
+  
+  _helpers.dynmap = function(product, options) {
+    return `https://dynmap.switchcraft.pw/?worldname=${product.world || "world"}&mapname=flat&zoom=7&x=${_helpers.center(product.startX, product.endX)}&y=${_helpers.center(product.startY, product.endY)}&z=${_helpers.center(product.startZ, product.endZ)}`;
   };
   
   /**

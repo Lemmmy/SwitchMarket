@@ -2,7 +2,6 @@ const keystone = require("keystone");
 const Types = keystone.Field.Types;
 
 const app = require("../keystone");
-const moment = require("moment");
 
 const Product = new keystone.List("Product", {
   autokey: { path: "slug", from: "name", unique: true },
@@ -13,13 +12,15 @@ const Product = new keystone.List("Product", {
 
 Product.add({
   name: { type: String, required: true },
+  visible: { type: Boolean, default: false },
   saleType: { type: Types.Select, options: "auction" },
   productType: { type: Types.Select, options: "claim" },
   sold: { type: Boolean, default: false },
   reserve: { type: Number, default: 0, dependsOn: { saleType: "auction" } },
   extensionMinutes: { type: Number, default: 30, dependsOn: { saleType: "auction" } },
+  auctionDurationMinutes: { type: Number, default: 0 },
   currentBid: { type: Types.Relationship, ref: "Bid", required: false },
-  endsAt: { type: Date, default: moment().add(3, "days") },
+  endsAt: { type: Date, default: null },
   world: { type: String, default: "world" },
   startX: { type: Number, default: 0, dependsOn: { productType: "claim" } },
   startY: { type: Number, default: 0, dependsOn: { productType: "claim" } },
@@ -32,18 +33,18 @@ Product.add({
 });
 
 Product.defaultColumns = "name, saleType, productType, sold, currentBid";
-Product.register();
 
 const scheduler = require("../sale-scheduler"); // fuck it
 
-Product.schema.post("save", product => {
+Product.schema.post("save", function(product) {
+  console.log("Product saved");
   console.log(require("util").inspect(product, {
     colors: true,
     showHidden: true,
     depth: null
   }));
-  
+
   if (!product.sold) scheduler.updateProduct(product).catch(console.error);
 });
 
-scheduler.start().catch(console.error);
+Product.register();

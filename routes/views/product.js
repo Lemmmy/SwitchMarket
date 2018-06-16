@@ -10,7 +10,8 @@ exports = module.exports = async function(req, res) {
   locals.section = "products";
 
   locals.product = await Product.model.findOne({
-    slug: req.params.slug
+    slug: req.params.slug,
+    visible: true
   })
     .populate("currentBid createdBy")
     .exec();

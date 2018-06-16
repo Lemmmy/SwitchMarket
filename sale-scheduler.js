@@ -1,7 +1,6 @@
 const _ = require("lodash");
 
 const keystone = require("keystone");
-const Product = keystone.list("Product");
 const moment = require("moment");
 
 const schedule = require("node-schedule");
@@ -9,6 +8,7 @@ const schedule = require("node-schedule");
 const jobs = {};
 
 let io;
+let Product;
 
 async function markAsSold(oldProduct) {
   if (!io) io = keystone.get("io");
@@ -42,6 +42,10 @@ async function markAsSold(oldProduct) {
 }
 
 async function scheduleProduct(product) {
+  if (!product.endsAt || !product.visible) return;
+  
+  console.log(`Scheduling product ${product.name} for ${product.endsAt} (pre)`);
+  
   if (moment().isAfter(moment(product.endsAt))) {
     return await markAsSold(product);
   }
@@ -65,9 +69,12 @@ module.exports.updateProduct = async function(product) {
 };
 
 module.exports.start = async function() {
+  Product = keystone.list("Product");
+  
   const products = await Product.model.find({
     saleType: "auction",
-    sold: false
+    sold: false,
+    visible: true
   });
   
   if (products) products.forEach(scheduleProduct);
