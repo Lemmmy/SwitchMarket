@@ -129,7 +129,14 @@
 
           <div class="border bg-light p-3 mt-4 hidden d-none" id="submit-bid-help-container">
             <h1>Submitting your bid</h1>
-            <p class="mb-0">Send <b id="submit-bid-help-amount">0 KST</b> to <b>{{product.slug}}@{{marketName}}</b> with the following meta:</p>
+            <p class="mb-0">
+              Send <b id="submit-bid-help-amount">0 KST</b> to <b>{{product.slug}}@{{marketName}}</b> by typing
+              this command in SwitchCraft:
+            </p>
+            <pre class="p-2 my-2 border bg-dark text-light">/pay {{product.slug}}@{{marketName}} <span id="submit-bid-help-amount-code">0</span></pre>
+            <p class="mb-0 mt-3">
+              Or by sending a payment with the following metadata in <a href="https://kristweb.lemmmy.pw">KristWeb</a>:
+            </p>
             <pre class="p-2 my-2 border bg-dark text-light">username=<span id="submit-bid-help-username"></span></pre>
           </div>
 
@@ -247,12 +254,14 @@
       
       var $submitBidHelpContainer = $("#submit-bid-help-container");
       var $submitBidHelpAmount = $("#submit-bid-help-amount");
+      var $submitBidHelpAmountCode = $("#submit-bid-help-amount-code");
       var $submitBidHelpUsername = $("#submit-bid-help-username");
       
       $submitBidHelpContainer.removeClass("d-none").hide();
 
       $submitBidForm.submit(function() {
         $submitBidHelpAmount.text(Number($bidAmount.val()).toLocaleString() + " KST");
+        $submitBidHelpAmountCode.text(Number($bidAmount.val()).toLocaleString());
         $submitBidHelpUsername.text($username.val());
         $submitBidHelpContainer.slideDown();
         
