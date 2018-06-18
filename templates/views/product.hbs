@@ -23,7 +23,14 @@
       </div>
       
       {{#if product.createdBy}}
-        <h5 class="font-weight-normal"><span class="text-muted">Seller: </span> {{#if product.seller}}{{product.seller}}{{else}}{{product.createdBy.name.first}} {{product.createdBy.name.last}}{{/if}}</h5>
+        <h5 class="font-weight-normal"><span class="text-muted"> 
+          {{#if product.compulsory}}
+            For sale on behalf of:
+          {{else}}
+            For sale by:
+          {{/if}}
+          {{#if product.seller}}{{product.seller}}{{else}}{{product.createdBy.name.first}} {{product.createdBy.name.last}}{{/if}}
+        </span></h5>
       {{/if}}
 
       {{#ifeq product.saleType "auction"}}

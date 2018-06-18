@@ -16,6 +16,7 @@ Product.add({
   saleType: { type: Types.Select, options: "auction" },
   productType: { type: Types.Select, options: "claim" },
   seller: { type: String },
+  compulsory: { type: Boolean, default: false },
   sold: { type: Boolean, default: false },
   reserve: { type: Number, default: 0, dependsOn: { saleType: "auction" } },
   extensionMinutes: { type: Number, default: 30, dependsOn: { saleType: "auction" } },
