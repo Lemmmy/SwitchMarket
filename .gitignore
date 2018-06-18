@@ -33,3 +33,5 @@ node_modules
 /uploads
 /public/uploads
 /.idea/
+
+/start.sh
