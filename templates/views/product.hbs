@@ -193,7 +193,7 @@
             {{/if}} 
           </table>
           <h5 class="mb-0 mt-3 w-100 border-bottom mb-2">Claim location <small class="d-inline-block ml-2"><a target="_blank" href="{{dynmap product}}"><span class="octicon octicon-globe"></span> View in Dynmap</a></small></h5>
-          {{ifeq product.world "world"}}
+          {{#ifeq product.world "world"}}
           {{else}}
             <p class="my-2">
               <span class="octicon octicon-info"></span> 
