@@ -6,7 +6,7 @@
       <a href="/products/{{slug}}"><h5 class="card-title text-dark">{{name}}</h5></a>
       <p class="card-text">
         {{#ifeq productType "claim"}}
-          <b>Size:</b> {{size startX endX}}x{{#ifeq (size product.startY product.endY) 255}}{{else}}{{size startY endY}}x{{/ifeq}}{{size startZ endZ}}
+          <b>Size:</b> {{size startX endX}}x{{#ifeq (size startY endY) 255}}{{else}}{{size startY endY}}x{{/ifeq}}{{size startZ endZ}}
         {{/ifeq}}
       </p>
     </div>
