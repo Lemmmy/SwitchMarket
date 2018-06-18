@@ -23,7 +23,7 @@
       </div>
       
       {{#if product.createdBy}}
-        <h5 class="font-weight-normal"><span class="text-muted">Seller: </span> {{product.createdBy.name.first}} {{product.createdBy.name.last}}</h5>
+        <h5 class="font-weight-normal"><span class="text-muted">Seller: </span> {{#if product.seller}}{{product.seller}}{{else}}{{product.createdBy.name.first}} {{product.createdBy.name.last}}{{/if}}</h5>
       {{/if}}
 
       {{#ifeq product.saleType "auction"}}
@@ -267,7 +267,7 @@
 
       $submitBidForm.submit(function() {
         $submitBidHelpAmount.text(Number($bidAmount.val()).toLocaleString() + " KST");
-        $submitBidHelpAmountCode.text(Number($bidAmount.val()).toLocaleString());
+        $submitBidHelpAmountCode.text(Number($bidAmount.val()).toString());
         $submitBidHelpUsername.text($username.val());
         $submitBidHelpContainer.slideDown();
         
