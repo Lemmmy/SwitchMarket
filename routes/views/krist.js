@@ -8,6 +8,8 @@ const request = require("request-promise");
 const kristUtils = require("krist-utils");
 const moment = require("moment");
 
+const { getMinimumIncrement } = require("../../utils.js");
+
 const PRIVATEKEY = process.env.KRIST_PRIVATEKEY;
 const ADDRESS = kristUtils.makeV2Address(PRIVATEKEY);
 const WEBHOOK_TOKEN = process.env.KRIST_WEBHOOK_TOKEN;
@@ -64,8 +66,12 @@ exports = module.exports = async function(req, res) {
   
   if (product.currentBid) {
     const currentBid = product.currentBid;
+    const minimumIncrement = getMinimumIncrement(currentBid.amount);
+    const minimumBid = currentBid.amount + minimumIncrement;
     
-    if (req.body.transaction.value <= currentBid.amount) return await refundTransaction("Not enough to out-bid current bid");
+    if (req.body.transaction.value < minimumBid) {
+      return await refundTransaction(`Sorry, but you must bit at least ${minimumBid.toLocaleString()} KST.`);
+    }
     
     const message = req.body.transaction.from === currentBid.address 
       ? `return=${product.slug}@${res.locals.marketName};message=You out-bid yourself on ${product.name}.`      
