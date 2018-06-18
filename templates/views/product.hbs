@@ -193,6 +193,15 @@
             {{/if}} 
           </table>
           <h5 class="mb-0 mt-3 w-100 border-bottom mb-2">Claim location <small class="d-inline-block ml-2"><a target="_blank" href="{{dynmap product}}"><span class="octicon octicon-globe"></span> View in Dynmap</a></small></h5>
+          {{ifeq product.world "world"}}
+          {{else}}
+            <p class="my-2">
+              <span class="octicon octicon-info"></span> 
+              This claim is located in the
+              {{#ifeq product.world "DIM1"}}End{{/ifeq}}
+              {{#ifeq product.world "DIM-11"}}Nether{{/ifeq}}.
+            </p>
+          {{/ifeq}}
           <table class="w-100">
             <tr>
               <td class="w-30 align-text-top font-weight-bold">X</td>
