@@ -18,13 +18,13 @@ exports = module.exports = async function(req, res) {
     .populate("currentBid createdBy")
     .exec();
   
-  const currentBidAmount = product.currentBid ? (product.currentBid.amount || 0) : 0;
-  const minimumIncrement = getMinimumIncrement(currentBidAmount);
-  locals.minimumBid = currentBidAmount + minimumIncrement;
-
   if (!locals.product) {
     return res.status(404).send(keystone.wrapHTMLError("Sorry, this product could not be found."));
   } else {
+    const currentBidAmount = product.currentBid ? (product.currentBid.amount || 0) : 0;
+    const minimumIncrement = getMinimumIncrement(currentBidAmount);
+    locals.minimumBid = currentBidAmount + minimumIncrement;
+
     locals.bids = _.map(await Bid.model.find()
       .where("item", locals.product._id)
       .sort("-createdAt")
