@@ -102,13 +102,13 @@
           <div class="mb-4">
             {{#if product.reserve}}
               {{#if (gte product.currentBid.amount product.reserve)}}
-                <span class="text-success">The reserve price has been met. <span class="octicon octicon-check"></span></span>
+                <span class="text-success d-block">The reserve price has been met. <span class="octicon octicon-check"></span></span>
               {{else}}
-                <span class="text-muted">The reserve price has not been met.</span>
+                <span class="text-muted d-block">The reserve price has not been met.</span>
               {{/if}}
             {{/if}}
 
-            <span class="text-muted">Bid at least {{krist minimumBid}}.</span>
+            <span class="text-muted d-block">Bid at least {{krist minimumBid}}.</span>
           </div>
 
           <form id="submit-bid-form">
