@@ -157,10 +157,13 @@
               <td class="w-30 align-text-top font-weight-bold">Width (X)</td>
               <td class="w-70">{{toLocaleString (size product.startX product.endX)}}m</td>
             </tr>
-            <tr>
-              <td class="w-30 align-text-top font-weight-bold">Height (Y)</td>
-              <td class="w-70">{{toLocaleString (size product.startY product.endY)}}m</td>
-            </tr>
+            {{#ifeq (size product.startY product.endY) 255}}
+            {{else}}
+              <tr>
+                <td class="w-30 align-text-top font-weight-bold">Height (Y)</td>
+                <td class="w-70">{{toLocaleString (size product.startY product.endY)}}m</td>
+              </tr>
+            {{/ifeq}}
             <tr>
               <td class="w-30 align-text-top font-weight-bold">Depth (Z)</td>
               <td class="w-70">{{toLocaleString (size product.startZ product.endZ)}}m</td>
@@ -185,10 +188,13 @@
               <td class="w-30 align-text-top font-weight-bold">X</td>
               <td class="w-70">{{toLocaleString product.startX}} <span class="text-muted mx-2">&ndash;</span> {{toLocaleString product.endX}}</td>
             </tr>
-            <tr>
-              <td class="w-30 align-text-top font-weight-bold">Y</td>
-              <td class="w-70">{{toLocaleString product.startY}} <span class="text-muted mx-2">&ndash;</span> {{toLocaleString product.endY}}</td>
-            </tr>
+            {{#ifeq (size product.startY product.endY) 255}}
+            {{else}}
+              <tr>
+                <td class="w-30 align-text-top font-weight-bold">Y</td>
+                <td class="w-70">{{toLocaleString product.startY}} <span class="text-muted mx-2">&ndash;</span> {{toLocaleString product.endY}}</td>
+              </tr>
+            {{/ifeq}}
             <tr>
               <td class="w-30 align-text-top font-weight-bold">Z</td>
               <td class="w-70">{{toLocaleString product.startZ}} <span class="text-muted mx-2">&ndash;</span> {{toLocaleString product.endZ}}</td>
