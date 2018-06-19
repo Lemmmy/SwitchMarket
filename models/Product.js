@@ -24,6 +24,7 @@ Product.add({
   currentBid: { type: Types.Relationship, ref: "Bid", required: false },
   endsAt: { type: Date, default: null },
   world: { type: String, default: "world" },
+  warpName: { type: String },
   startX: { type: Number, default: 0, dependsOn: { productType: "claim" } },
   startY: { type: Number, default: 0, dependsOn: { productType: "claim" } },
   startZ: { type: Number, default: 0, dependsOn: { productType: "claim" } },
