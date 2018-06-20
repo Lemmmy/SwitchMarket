@@ -70,7 +70,7 @@ exports = module.exports = async function(req, res) {
     const minimumBid = currentBid.amount + minimumIncrement;
     
     if (req.body.transaction.value < minimumBid) {
-      return await refundTransaction(`Sorry, but you must bit at least ${minimumBid.toLocaleString()} KST.`);
+      return await refundTransaction(`Sorry, but you must bid at least ${minimumBid.toLocaleString()} KST.`);
     }
     
     const message = req.body.transaction.from === currentBid.address 
