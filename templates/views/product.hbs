@@ -99,7 +99,7 @@
         {{else}}
           <div class="d-flex flex-row align-items-baseline">
             {{#if product.currentBid}}
-              <h2 class="m-0 mr-2 {{#if product.reserve}}{{#if (gte product.currentBid.amount product.reserve)}}text-success{{/if}}{{/if}}" style="line-height: inherit">{{krist product.currentBid.amount}}</h2>
+              <h2 class="m-0 mr-2 {{#unless product.minimumReserve}}{{#if product.reserve}}{{#if (gte product.currentBid.amount product.reserve)}}text-success{{/if}}{{/if}}{{/unless}}" style="line-height: inherit">{{krist product.currentBid.amount}}</h2>
               <span class="text-muted">{{> timeago time=product.currentBid.createdAt}}</span>
             {{else}}
               {{#if product.minimumReserve}}

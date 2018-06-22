@@ -58,7 +58,7 @@ exports = module.exports = async function(req, res) {
     .populate("currentBid")
     .exec();
   
-  if (!product) return await refundTransaction("Product not found");
+  if (!product || !product.visible) return await refundTransaction("Product not found");
 
   const now = moment();
   
