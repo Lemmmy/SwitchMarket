@@ -63,7 +63,7 @@ exports = module.exports = async function(req, res) {
   const now = moment();
   
   if (product.sold || (product.endsAt && now.isAfter(product.endsAt))) return await refundTransaction("Auction already over");
-  if (product.seller && product.seller.toLowerCase() === meta.username.toLowerCase) {
+  if (product.seller && product.seller.toLowerCase() === meta.username.toLowerCase()) {
     return await refundTransaction("You can't bid on your own auction!");
   }
   
