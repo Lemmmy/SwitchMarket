@@ -76,9 +76,12 @@ exports = module.exports = async function(req, res) {
       return await refundTransaction(`Sorry, but you must bid at least ${minimumBid.toLocaleString()} KST.`);
     }
     
-    const message = req.body.transaction.from === currentBid.address 
-      ? `return=${product.slug}@${res.locals.marketName};message=You out-bid yourself on ${product.name}.`      
-      : `return=${product.slug}@${res.locals.marketName};message=You were out-bid on ${product.name}! Send to \`${product.slug}@${res.locals.marketName}\` to bid again.`;
+    if (req.body.transaction.from === currentBid.address) {
+      return await refundTransaction("You can't out-bid yourself!");      
+    }
+    
+    const message = `return=${product.slug}@${res.locals.marketName};message=You were out-bid on ${product.name}! `
+      + `Send to \`${product.slug}@${res.locals.marketName}\` to bid again.`;
     
     sendTransaction(
       currentBid.address, 
