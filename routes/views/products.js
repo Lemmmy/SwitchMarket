@@ -11,10 +11,12 @@ exports = module.exports = async function(req, res) {
   locals.products = await p(Product.paginate({
     page: req.query.page || 1,
     perPage: 12,
-    maxPages: 5
+    maxPages: 5,
+    filters: {
+      sold: false,
+      visible: true
+    }
   })
-    .where("sold", false)
-    .where("visible", true)
     .populate("currentBid")
     .sort("-createdAt")
     .exec)();
