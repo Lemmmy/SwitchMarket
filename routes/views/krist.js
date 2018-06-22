@@ -76,7 +76,7 @@ exports = module.exports = async function(req, res) {
       return await refundTransaction(`Sorry, but you must bid at least ${minimumBid.toLocaleString()} KST.`);
     }
     
-    if (req.body.transaction.from === currentBid.address) {
+    if (req.body.transaction.from === currentBid.address || meta.username.toLowerCase() === currentBid.username.toLowerCase()) {
       return await refundTransaction("You can't out-bid yourself!");      
     }
     
