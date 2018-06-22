@@ -19,6 +19,7 @@ Product.add({
   compulsory: { type: Boolean, default: false },
   sold: { type: Boolean, default: false },
   reserve: { type: Number, default: 0, dependsOn: { saleType: "auction" } },
+  minimumReserve: { type: Boolean, default: false },
   extensionMinutes: { type: Number, default: 30, dependsOn: { saleType: "auction" } },
   auctionDurationMinutes: { type: Number, default: 0 },
   currentBid: { type: Types.Relationship, ref: "Bid", required: false },

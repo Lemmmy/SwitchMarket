@@ -24,6 +24,8 @@ exports = module.exports = async function(req, res) {
     const currentBidAmount = product.currentBid ? (product.currentBid.amount || 0) : 0;
     const minimumIncrement = getMinimumIncrement(currentBidAmount);
     locals.minimumBid = currentBidAmount + minimumIncrement;
+    
+    if (!product.currentBid && product.minimumReserve) locals.minimumBid = product.reserve;
 
     locals.bids = _.map(await Bid.model.find()
       .where("item", locals.product._id)

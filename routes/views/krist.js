@@ -82,6 +82,12 @@ exports = module.exports = async function(req, res) {
       currentBid.amount, 
       message
     );
+  } else if (product.minimumReserve) {
+    const minimumBid = product.reserve;
+
+    if (req.body.transaction.value < minimumBid) {
+      return await refundTransaction(`Sorry, but you must bid at least ${minimumBid.toLocaleString()} KST.`);
+    }
   }
 
   const newBid = new Bid.model({

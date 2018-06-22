@@ -102,20 +102,33 @@
               <h2 class="m-0 mr-2 {{#if product.reserve}}{{#if (gte product.currentBid.amount product.reserve)}}text-success{{/if}}{{/if}}" style="line-height: inherit">{{krist product.currentBid.amount}}</h2>
               <span class="text-muted">{{> timeago time=product.currentBid.createdAt}}</span>
             {{else}}
-              <h2 class="m-0 text-muted" style="line-height: inherit">No bid</h2>
+              {{#if product.minimumReserve}}
+                <span class="text-muted pr-2">Minimum bid</span>
+                <h2 class="m-0 text-muted" style="line-height: inherit">{{krist product.reserve}}</h2>
+              {{else}}
+                <h2 class="m-0 text-muted" style="line-height: inherit">No bid</h2>                
+              {{/if}}
             {{/if}}
           </div>
         
           <div class="mb-4">
             {{#if product.reserve}}
-              {{#if (gte product.currentBid.amount product.reserve)}}
-                <span class="text-success d-block">The reserve price has been met. <span class="octicon octicon-check"></span></span>
-              {{else}}
-                <span class="text-muted d-block">The reserve price has not been met.</span>
-              {{/if}}
+                {{#unless product.minimumReserve}}
+                {{#if (gte product.currentBid.amount product.reserve)}}
+                  <span class="text-success d-block">The reserve price has been met. <span class="octicon octicon-check"></span></span>
+                {{else}}
+                  <span class="text-muted d-block">The reserve price has not been met.</span>
+                {{/if}}
+              {{/unless}}
             {{/if}}
-
-            <span class="text-muted d-block">Bid at least {{krist minimumBid}}.</span>
+            
+            {{#if product.minimumReserve}}
+              {{#if product.currentBid}}
+                <span class="text-muted d-block">Bid at least {{krist minimumBid}}.</span>
+              {{/if}}
+            {{else}}
+              <span class="text-muted d-block">Bid at least {{krist minimumBid}}.</span>              
+            {{/if}}
           </div>
 
           <form id="submit-bid-form">
