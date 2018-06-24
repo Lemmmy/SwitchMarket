@@ -2,7 +2,10 @@
   <div class="card product-card">
     {{#if image.filename}}<a href="/products/{{slug}}"><img class="card-img-top" src="/uploads/{{image.filename}}" /></a>{{/if}}
     <div class="card-body clearfix">
-      {{> sale-type-badge type=saleType}}
+      {{#ifeq saleType "auction"}}
+      {{else}}
+        {{> sale-type-badge type=saleType}}        
+      {{/ifeq}}
       <a href="/products/{{slug}}"><h5 class="card-title text-dark">{{name}}</h5></a>
       <p class="card-text">
         {{#ifeq productType "claim"}}
