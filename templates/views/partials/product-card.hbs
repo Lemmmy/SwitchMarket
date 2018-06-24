@@ -12,7 +12,7 @@
           Size: <b>{{size startX endX}}x{{#ifeq (size startY endY) 255}}{{else}}{{size startY endY}}x{{/ifeq}}{{size startZ endZ}}</b>
         {{/ifeq}}
         <br />
-        <span class="text-sm">
+        <small>
           {{#if createdBy}}
             {{#if compulsory}}
               For sale on behalf of:
@@ -21,7 +21,7 @@
             {{/if}}
             <b>{{#if seller}}{{seller}}{{else}}{{createdBy.name.first}} {{createdBy.name.last}}{{/if}}</b>
           {{/if}}
-        </span>
+        </small>
       </p>
     </div>
     <div class="card-footer">
