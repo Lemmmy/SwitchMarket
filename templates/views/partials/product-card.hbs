@@ -12,14 +12,16 @@
           Size: <b>{{size startX endX}}x{{#ifeq (size startY endY) 255}}{{else}}{{size startY endY}}x{{/ifeq}}{{size startZ endZ}}</b>
         {{/ifeq}}
         <br />
-        {{#if createdBy}}
-          {{#if compulsory}}
-            For sale on behalf of:
-          {{else}}
-            For sale by:
+        <span class="text-sm">
+          {{#if createdBy}}
+            {{#if compulsory}}
+              For sale on behalf of:
+            {{else}}
+              For sale by:
+            {{/if}}
+            <b>{{#if seller}}{{seller}}{{else}}{{createdBy.name.first}} {{createdBy.name.last}}{{/if}}</b>
           {{/if}}
-          <b>{{#if seller}}{{seller}}{{else}}{{createdBy.name.first}} {{createdBy.name.last}}{{/if}}</b>
-        {{/if}}
+        </span>
       </p>
     </div>
     <div class="card-footer">
