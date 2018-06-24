@@ -24,7 +24,7 @@ exports = module.exports = async function(req, res) {
     maxPages: 5,
     filters
   })
-    .populate("currentBid")
+    .populate("currentBid createdBy")
     .sort("-createdAt")
     .exec)();
 
