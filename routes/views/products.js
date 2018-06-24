@@ -14,7 +14,7 @@ exports = module.exports = async function(req, res) {
   };
   
   if (!sold) filters.sold = false;
-  if (sold === "sale") filters.sold = true;
+  if (sold === "sold") filters.sold = true;
 
   locals.products = await p(Product.paginate({
     page: req.query.page || 1,
