@@ -13,7 +13,7 @@ exports = module.exports = async function(req, res) {
     visible: true
   };
   
-  if (!sold) filters.sold = false;
+  if (!sold || sold === "sale") filters.sold = false;
   if (sold === "sold") filters.sold = true;
 
   locals.products = await p(Product.paginate({
