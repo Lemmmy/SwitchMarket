@@ -7,15 +7,15 @@
           <h5 class="mt-2">Product Filters</h5>
           <form method="get">
             <div class="custom-control custom-radio">
-              <input type="radio" id="sale" name="sold" class="custom-control-input" {{#unless sold}}checked{{/unless}} {{#ifeq sold "sale"}}checked{{/ifeq}}>
+              <input type="radio" id="sale" value="sale" name="sold" class="custom-control-input" {{#unless sold}}checked{{/unless}} {{#ifeq sold "sale"}}checked{{/ifeq}}>
               <label class="custom-control-label" for="sale">For Sale</label>
             </div>
             <div class="custom-control custom-radio">
-              <input type="radio" id="sold" name="sold" class="custom-control-input" {{#ifeq sold "sold"}}checked{{/ifeq}}>
+              <input type="radio" id="sold" value="sold" name="sold" class="custom-control-input" {{#ifeq sold "sold"}}checked{{/ifeq}}>
               <label class="custom-control-label" for="sold">Auction Ended</label>
             </div>
             <div class="custom-control custom-radio">
-              <input type="radio" id="all" name="sold" class="custom-control-input" {{#ifeq sold "all"}}checked{{/ifeq}}>
+              <input type="radio" id="all" value="all" name="sold" class="custom-control-input" {{#ifeq sold "all"}}checked{{/ifeq}}>
               <label class="custom-control-label" for="all">All</label>
             </div>
             <input type="submit" class="btn btn-primary mt-2 float-right" value="Apply">
