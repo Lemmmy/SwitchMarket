@@ -7,7 +7,7 @@ exports = module.exports = async function(req, res) {
   const locals = res.locals;
 
   locals.section = "products";
-  const sold = locals.filter = req.query.sold;
+  const sold = locals.sold = req.query.sold;
   
   const filters = {
     visible: true
