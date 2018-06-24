@@ -11,16 +11,20 @@
       </p>
     </div>
     <div class="card-footer">
-      {{#if currentBid}}
-        <b>Current bid:</b> {{krist currentBid.amount}}
-        <small class="text-muted">{{> timeago time=currentBid.createdAt}}</small>
+      {{#if sold}}
+        <span class="text-muted">Auction ended. <a href="/products/{{slug}}">More info</a></span>
       {{else}}
-        <span class="text-muted">No bid yet. <a href="/products/{{slug}}">Bid now!</a></span>
-      {{/if}}
-      
-      <br />
-      {{#if endsAt}}
-        <b>Ends:</b> <span class="text-muted">{{> countdown time=endsAt}}</span>
+        {{#if currentBid}}
+          <b>Current bid:</b> {{krist currentBid.amount}}
+          <small class="text-muted">{{> timeago time=currentBid.createdAt}}</small>
+        {{else}}
+          <span class="text-muted">No bid yet. <a href="/products/{{slug}}">Bid now!</a></span>
+        {{/if}}
+
+        <br />
+        {{#if endsAt}}
+          <b>Ends:</b> <span class="text-muted">{{> countdown time=endsAt}}</span>
+        {{/if}}
       {{/if}}
     </div>
   </div>

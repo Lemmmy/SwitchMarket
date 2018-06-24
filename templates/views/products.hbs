@@ -1,14 +1,40 @@
 {{!< default}}
 <div class="container">
-  {{> page-heading title="Products"}}
-  
   <div class="row">
-      {{#each products.results}}
-        {{> product-card}}
-      {{/each}}
-  </div>
-  
-  <div class="row">
-    {{> pagination products}}    
+    <div class="col-md-3">
+      <ul class="list-group">
+        <li class="list-group-item">
+          <h5 class="mt-2">Product Filters</h5>
+          <form method="get">
+            <div class="custom-control custom-radio">
+              <input type="radio" id="sale" name="sold" class="custom-control-input">
+              <label class="custom-control-label" for="sale">For Sale</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input type="radio" id="sold" name="sold" class="custom-control-input">
+              <label class="custom-control-label" for="sale">Auction Ended</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input type="radio" id="all" name="sold" class="custom-control-input">
+              <label class="custom-control-label" for="sale">All</label>
+            </div>
+            <input type="submit" class="btn btn-primary mt-2 float-right" value="Apply">
+          </form>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-9">
+      {{> page-heading title="Products"}}
+
+      <div class="row">
+        {{#each products.results}}
+          {{> product-card}}
+        {{/each}}
+      </div>
+
+      <div class="row">
+        {{> pagination products}}
+      </div>      
+    </div>
   </div>
 </div>
