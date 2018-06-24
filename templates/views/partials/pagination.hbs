@@ -1,13 +1,13 @@
 <nav class="col-12 mt-2 d-flex justify-content-center">
   <ul class="pagination">
     <li class="page-item {{#unless previous}}disabled{{/unless}}">
-      <a class="page-link" href="{{paginationPreviousUrl previous}}">
+      <a class="page-link" href="{{paginationPreviousUrl query previous}}">
         Prev
       </a>
     </li>
-    {{{paginationNavigation pages currentPage totalPages}}}
+    {{{paginationNavigation query pages currentPage totalPages}}}
     <li class="page-item {{#unless next}}disabled{{/unless}}">
-      <a class="page-link" href="{{paginationNextUrl next totalPages}}">
+      <a class="page-link" href="{{paginationNextUrl query next totalPages}}">
         Next
       </a>
     </li>

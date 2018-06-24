@@ -5,6 +5,8 @@ const p = require("es6-promisify").promisify;
 exports = module.exports = async function(req, res) {
   const view = new keystone.View(req, res);
   const locals = res.locals;
+  
+  locals.query = req.query;
 
   locals.section = "products";
   const sold = locals.sold = req.query.sold;

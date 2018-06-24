@@ -4,6 +4,7 @@ const hbs = require("handlebars");
 const keystone = require("keystone");
 const cloudinary = require("cloudinary");
 const krist = require("krist-utils");
+const qs = require("querystring");
 
 // Collection of templates to interpolate
 const linkTemplate = _.template(`<a href="<%= url %>"><%= text %></a>`);
@@ -216,8 +217,10 @@ module.exports = function() {
     return ("/product/" + postSlug);
   };
 
-  _helpers.pageUrl = function(pageNumber, options) {
-    return "/products?page=" + pageNumber;
+  _helpers.pageUrl = function(query, pageNumber, options) {
+    query.page = pageNumber;
+    
+    return "/products?" + qs.stringify(query);
   };
 
     // ### Pagination Helpers
@@ -240,7 +243,7 @@ module.exports = function() {
     return options.inverse(this);
   };
 
-  _helpers.paginationNavigation = function(pages, currentPage, totalPages, options) {
+  _helpers.paginationNavigation = function(query, pages, currentPage, totalPages, options) {
     let html = "";
 
     // pages should be an array ex.  [1,2,3,4,5,6,7,8,9,10, '....']
@@ -260,7 +263,7 @@ module.exports = function() {
       }
 
 			// get the pageUrl using the integer value
-      const pageUrl = _helpers.pageUrl(page);
+      const pageUrl = _helpers.pageUrl(query, page);
       // wrapup the html
       html += "<li" + liClass + ">" + paginationLinkTemplate({ url: pageUrl, text: pageText }) + "</li>\n";
     });
@@ -269,20 +272,20 @@ module.exports = function() {
 
 	// special helper to ensure that we always have a valid page url set even if
 	// the link is disabled, will default to page 1
-  _helpers.paginationPreviousUrl = function(previousPage, totalPages) {
+  _helpers.paginationPreviousUrl = function(query, previousPage, totalPages) {
     if (previousPage === false) {
       previousPage = 1;
     }
-    return _helpers.pageUrl(previousPage);
+    return _helpers.pageUrl(query, previousPage);
   };
 
 	// special helper to ensure that we always have a valid next page url set
 	// even if the link is disabled, will default to totalPages
-  _helpers.paginationNextUrl = function(nextPage, totalPages) {
+  _helpers.paginationNextUrl = function(query, nextPage, totalPages) {
     if (nextPage === false) {
       nextPage = totalPages;
     }
-    return _helpers.pageUrl(nextPage);
+    return _helpers.pageUrl(query, nextPage);
   };
 
 
