@@ -6,27 +6,52 @@
       {{else}}
         {{> sale-type-badge type=saleType}}        
       {{/ifeq}}
-      <a href="/products/{{slug}}"><h5 class="card-title text-dark">{{name}}</h5></a>
+      <a href="/products/{{slug}}"><h5 class="card-title">{{name}}</h5></a>
       <p class="card-text">
         {{#ifeq productType "claim"}}
-          <b>Size:</b> {{size startX endX}}x{{#ifeq (size startY endY) 255}}{{else}}{{size startY endY}}x{{/ifeq}}{{size startZ endZ}}
+          Size: <b>{{size startX endX}}x{{#ifeq (size startY endY) 255}}{{else}}{{size startY endY}}x{{/ifeq}}{{size startZ endZ}}</b>
         {{/ifeq}}
+        {{#if createdBy}}
+          {{#if compulsory}}
+            For sale on behalf of:
+          {{else}}
+            For sale by:
+          {{/if}}
+          <b>{{#if seller}}{{seller}}{{else}}{{createdBy.name.first}} {{createdBy.name.last}}{{/if}}</b>
+        {{/if}}
       </p>
     </div>
     <div class="card-footer">
       {{#if sold}}
-        <span class="text-muted">Auction ended. <a href="/products/{{slug}}">More info</a></span>
-      {{else}}
-        {{#if currentBid}}
-          <b>Current bid:</b> {{krist currentBid.amount}}
-          <small class="text-muted">{{> timeago time=currentBid.createdAt}}</small>
+        {{#if reserve}}
+          {{#if (gte currentBid.amount reserve)}}
+            Sold for: <b class="text-success">{{krist currentBid.amount}}</b>            
+          {{else}}
+            Bidding reached: <b class="text-danger">{{krist currentBid.amount}}</b>
+          {{/if}}
         {{else}}
-          <span class="text-muted">No bid yet. <a href="/products/{{slug}}">Bid now!</a></span>
+          Sold for: <b class="text-success">{{krist currentBid.amount}}</b>
         {{/if}}
 
         <br />
         {{#if endsAt}}
-          <b>Ends:</b> <span class="text-muted">{{> countdown time=endsAt}}</span>
+          Ended: <b>{{> timeago time=endsAt}}</b>
+        {{/if}}
+      {{else}}
+        {{#if currentBid}}
+          Current bid: <b>{{krist currentBid.amount}}</b>
+          <small class="text-muted">{{> timeago time=currentBid.createdAt}}</small>
+        {{else}}
+          {{#if minimumReserve}}
+            Minimum bid: <b class="text-muted">{{krist reserve}}</b>
+          {{else}}
+            <span class="text-muted">No bid yet. <a href="/products/{{slug}}">Bid now!</a></span>
+          {{/if}}
+        {{/if}}
+
+        <br />
+        {{#if endsAt}}
+          Ends: <b>{{> countdown time=endsAt}}</b>
         {{/if}}
       {{/if}}
     </div>
