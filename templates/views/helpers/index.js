@@ -218,6 +218,7 @@ module.exports = function() {
   };
 
   _helpers.pageUrl = function(query, pageNumber, options) {
+    if (!query) query = {};
     query.page = pageNumber;
     
     return "/products?" + qs.stringify(query);
