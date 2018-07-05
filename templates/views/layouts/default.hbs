@@ -102,7 +102,7 @@
           var $this = $(this);
           var finalDate = moment($this.data("countdown"));
           
-          $this.countdown(finalDate, function(event) {
+          $this.countdown(finalDate.toDate(), function(event) {
             var format = "%H:%M:%S";
             
             if(event.offset.totalDays > 0) format = "%-d day%!d " + format;
