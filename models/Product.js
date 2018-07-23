@@ -44,11 +44,13 @@ Product.schema.path("visible").set(function(newVisible) {
   if (!this.visible && newVisible) this._justMadeVisible = true;
 });
 
-Product.schema.pre("save", function(product) {
+Product.schema.pre("save", function(product, next) {
   if (product._justMadeVisible) {
     product._justMadeVisible = false;
     scheduler.announceProduct(product).catch(console.error);
   }  
+  
+  next();
 });
 
 Product.schema.post("save", function(product) {
