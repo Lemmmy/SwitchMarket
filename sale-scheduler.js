@@ -58,11 +58,6 @@ async function scheduleProduct(product) {
 }
 
 module.exports.updateProduct = async function(product) {
-  if (jobs[product._id] && !jobs[product._id].visible && product.visible) { // product was just made visible
-    const seller = product.seller || `${product.createdBy.name.first} ${product.createdBy.name.last}`;
-    keystone.get("log")(`:new: For sale ${product.compulsory ? "on behalf of" : "by"}: **${seller}**!`, "green", product);
-  }
-  
   if (jobs[product._id] && jobs[product._id].product.endsAt !== product.endsAt) {
     console.log(`Product ${product.name} updated`);    
     jobs[product._id].job.cancel();
@@ -71,6 +66,11 @@ module.exports.updateProduct = async function(product) {
   }
   
   await scheduleProduct(product);
+};
+
+module.exports.announceProduct = function(product) {
+  const seller = product.seller || `${product.createdBy.name.first} ${product.createdBy.name.last}`;
+  keystone.get("log")(`:new: For sale ${product.compulsory ? "on behalf of" : "by"}: **${seller}**!`, "green", product);
 };
 
 module.exports.start = async function() {
