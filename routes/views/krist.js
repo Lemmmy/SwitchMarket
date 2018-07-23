@@ -120,7 +120,7 @@ exports = module.exports = async function(req, res) {
   
   io.sockets.emit("bid", _.omit(product, ["createdBy", "updatedBy"]));
   
-  keystone.get("log")(`:arrow_down: **${newBid.amount} KST** bid on **${product.name}** by **${newBid.username}** (${newBid.address})`, product);
+  keystone.get("log")(`:arrow_down: **${newBid.amount.toLocaleString()} KST** bid by **${newBid.username.substring(0, 16)}**`, "blue", product, newBid.address);
   
   return res.send("ya");
 };

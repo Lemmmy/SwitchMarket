@@ -5,6 +5,8 @@ const handlebars = require("express-handlebars");
 const websockets = require("./websockets");
 const request = require("request-promise");
 
+const helpers = new require("./templates/views/helpers")();
+
 module.exports.storage = new keystone.Storage({
   adapter: keystone.Storage.Adapters.FS,
   fs: {
@@ -13,19 +15,41 @@ module.exports.storage = new keystone.Storage({
   }
 });
 
-keystone.set("log", function(message, product) {
+const messageColours = {
+  red: 0xe74c3c,
+  green: 0x2ecc71,
+  blue: 0x3498db
+};
+
+keystone.set("log", function(message, colour, product, address) {
   if (!process.env.DISCORD_WEBHOOK) return;
   const serverURL = process.env.SERVER_URL || "https://market.switchcraft.pw";
-  let content = message;
-
-  if (product) {
-    content += `\n**[Listing](${serverURL}/products/${product.slug})**`;
-    content += ` | **[Admin](${serverURL}/keystone/products/${product._id})**`;
+  
+  const fields = [];
+  
+  if (address) {
+    fields.push({
+      name: "Address",
+      value: `[${address}](${helpers.kristweb(address)})`,
+      inline: true
+    });
   }
+  
+  const embed = {
+    title: product.name,
+    description: message.replace(/@/g, ":monkey_face:"),
+    url: `${serverURL}/products/${product.slug}`,
+    color: messageColours[colour],
+    timestamp: new Date(),
+    thumbnail: product.image ? {
+      url: `${serverURL}/uploads/${product.image.filename}`
+    } : null,
+    fields
+  };
   
   request(process.env.DISCORD_WEBHOOK, {
     method: "POST",
-    body: { content },
+    body: { embeds: [embed] },
     json: true
   }).catch(error => {
     console.error("Error logging to discord:");
@@ -47,7 +71,7 @@ keystone.init({
     layoutsDir: "templates/views/layouts",
     partialsDir: "templates/views/partials",
     defaultLayout: "default",
-    helpers: new require("./templates/views/helpers")(),
+    helpers,
     extname: ".hbs"
   }).engine,
 
