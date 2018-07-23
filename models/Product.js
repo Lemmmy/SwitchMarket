@@ -41,11 +41,8 @@ Product.defaultColumns = "name, saleType, productType, sold, currentBid";
 const scheduler = require("../sale-scheduler"); // fuck it
 
 Product.schema.path("visible").set(function(newVisible) {
-  const oldVisible = this.visible;
-  this.visible = newVisible;
-  
-  if (!oldVisible && newVisible) { // product was just made visible
-    scheduler.announceProduct(this);
+  if (!this.visible && newVisible) { // product was just made visible
+    scheduler.announceProduct(this).catch(console.error);
   }
 });
 
