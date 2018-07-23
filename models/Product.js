@@ -44,10 +44,10 @@ Product.schema.path("visible").set(function(newVisible) {
   if (!this.visible && newVisible) this._justMadeVisible = true;
 });
 
-Product.schema.pre("save", function(product, next) {
-  if (product._justMadeVisible) {
-    product._justMadeVisible = false;
-    scheduler.announceProduct(product).catch(console.error);
+Product.schema.pre("save", function(next) {
+  if (this._justMadeVisible) {
+    this._justMadeVisible = false;
+    scheduler.announceProduct(this).catch(console.error);
   }  
   
   next();
