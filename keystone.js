@@ -16,9 +16,9 @@ module.exports.storage = new keystone.Storage({
 });
 
 const messageColours = {
-  red: 0xe74c3c,
-  green: 0x2ecc71,
-  blue: 0x3498db
+  red: 0xdd2e44,
+  green: 0x77b255,
+  blue: 0x3b88c3
 };
 
 keystone.set("log", function(message, colour, product, address) {
