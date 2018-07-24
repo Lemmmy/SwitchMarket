@@ -42,7 +42,6 @@ const scheduler = require("../sale-scheduler"); // fuck it
 
 Product.schema.path("visible").set(function(newVisible) {
   if (!this.visible && newVisible) this._justMadeVisible = true;
-  this.visible = newVisible;
 });
 
 Product.schema.pre("save", function(next) {

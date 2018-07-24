@@ -69,7 +69,9 @@ module.exports.updateProduct = async function(product) {
 };
 
 module.exports.announceProduct = async function(product) {
-  const seller = product.seller || `${product.createdBy.name.first} ${product.createdBy.name.last}`;
+  await product.populate("createdBy");  
+  const fullName = product.createdBy && product.createdBy.name ? `${product.createdBy.name.first} ${product.createdBy.name.last}` : "Unknown Seller";
+  const seller = product.seller || fullName;
   keystone.get("log")(`:new: For sale ${product.compulsory ? "on behalf of" : "by"}: **${seller}**!`, "green", product);
 };
 
