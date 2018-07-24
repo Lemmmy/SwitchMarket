@@ -42,11 +42,13 @@ const scheduler = require("../sale-scheduler"); // fuck it
 
 Product.schema.path("visible").set(function(newVisible) {
   if (!this.visible && newVisible) this._justMadeVisible = true;
+  return true;
 });
 
 Product.schema.pre("save", function(next) {
   if (this._justMadeVisible) {
     this._justMadeVisible = false;
+    this.visible = true;
     scheduler.announceProduct(this).catch(console.error);
   }  
   
