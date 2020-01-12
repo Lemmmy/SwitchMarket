@@ -57,12 +57,6 @@ Product.schema.pre("save", function(next) {
 
 Product.schema.post("save", function(product) {
   console.log("Product saved");
-  console.log(require("util").inspect(product, {
-    colors: true,
-    showHidden: true,
-    depth: null
-  }));
-
   if (!product.sold) scheduler.updateProduct(product).catch(console.error);
 });
 
