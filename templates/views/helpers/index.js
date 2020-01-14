@@ -63,9 +63,9 @@ module.exports = function() {
 
   _helpers.kristweb = function(a, options) {
     if (krist.isValidKristAddress(a)) {
-      return `https://kristweb.lemmmy.pw/addresses/${a}`;
+      return `https://krist.club/addresses/${a}`;
     } else if (/^(?:[a-z0-9-_]{1,32}@)?[a-z0-9]{1,64}\.kst$/.test(a)) {
-      return `https://kristweb.lemmmy.pw/names/${a}`;      
+      return `https://krist.club/names/${a}`;      
     }
   };
   
