@@ -11,7 +11,7 @@
     "handlebars": "4.3.0",
     "keystone": "^4.0.0",
     "krist-utils": "^1.0.5",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "node-sass": "^4.13.0",
     "node-sass-middleware": "0.11.0",
